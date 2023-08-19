@@ -1,0 +1,767 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="李翔的博客">
+  <meta name="keywords" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+  
+    <meta name="description" content="# git 教程     9. 远程仓库我们的代码不能总是放在本地,因为总是放在本地,一旦电脑出现故障,数据将丢失,怎么共享呢,这里我们需要一个服务器, 我们可以把代码放到服务器上,然后让别人下载,这样我峨嵋你既可以备份代码,也可以进行团队协作开发 9.0 局域网仓库1实际上我们可以搭建一个单间的局域网服务器共享我们的代码  9.0.1本地相对路径,多个文件夹之间共享代码 9.0.2开启局域">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git (3)">
+<meta property="og:url" content="https://iexlee.github.io/43%E3%80%81Git%E6%95%99%E7%A8%8B.html">
+<meta property="og:site_name" content="xLee&#39;s blog">
+<meta property="og:description" content="# git 教程     9. 远程仓库我们的代码不能总是放在本地,因为总是放在本地,一旦电脑出现故障,数据将丢失,怎么共享呢,这里我们需要一个服务器, 我们可以把代码放到服务器上,然后让别人下载,这样我峨嵋你既可以备份代码,也可以进行团队协作开发 9.0 局域网仓库1实际上我们可以搭建一个单间的局域网服务器共享我们的代码  9.0.1本地相对路径,多个文件夹之间共享代码 9.0.2开启局域">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://iexlee.github.io/medias/img_Git_assets/cover.png">
+<meta property="article:published_time" content="2022-09-02T01:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-19T15:53:01.904Z">
+<meta property="article:author" content="李翔的博客">
+<meta property="article:tag" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iexlee.github.io/medias/img_Git_assets/cover.png">
+  
+  
+  
+  <title>Git (3) - xLee&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iexlee.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="xLee's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>xLee&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Git (3)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-02 09:00" pubdate>
+          2022年9月2日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Git (3)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <img src="/medias/img_Git_assets/gitlogo.png" srcset="/img/loading.gif" lazyload/>
+
+<hr/>
+# git 教程
+
+
+
+
+<h1 id="9-远程仓库"><a href="#9-远程仓库" class="headerlink" title="9. 远程仓库"></a>9. 远程仓库</h1><p>我们的代码不能总是放在本地,因为总是放在本地,一旦电脑出现故障,数据将丢失,怎么共享呢,这里我们需要一个服务器, 我们可以把代码放到服务器上,然后让别人下载,这样我峨嵋你既可以备份代码,也可以进行团队协作开发</p>
+<h2 id="9-0-局域网仓库"><a href="#9-0-局域网仓库" class="headerlink" title="9.0 局域网仓库"></a>9.0 局域网仓库</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">实际上我们可以搭建一个单间的局域网服务器共享我们的代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="9-0-1本地相对路径-多个文件夹之间共享代码"><a href="#9-0-1本地相对路径-多个文件夹之间共享代码" class="headerlink" title="9.0.1本地相对路径,多个文件夹之间共享代码"></a>9.0.1本地相对路径,多个文件夹之间共享代码</h3><p><img src="/medias/img_Git_assets/1572535798760.png" srcset="/img/loading.gif" lazyload alt="1572535798760"></p>
+<h3 id="9-0-2开启局域网共享代码"><a href="#9-0-2开启局域网共享代码" class="headerlink" title="9.0.2开启局域网共享代码"></a>9.0.2开启局域网共享代码</h3><p><img src="/medias/img_Git_assets/1572535921581.png" srcset="/img/loading.gif" lazyload alt="1572535921581"></p>
+<p><img src="/medias/img_Git_assets/1572536029899.png" srcset="/img/loading.gif" lazyload alt="1572536029899"></p>
+<p>局域网这种共享是没有安全控制的,都可以访问,如果想要搭建一个可以控制权限的服务器需要借助第三方软件</p>
+<p>gitblit,可以自行搜索搭建</p>
+<h2 id="9-1-常用远程仓库托管服务"><a href="#9-1-常用远程仓库托管服务" class="headerlink" title="9.1 常用远程仓库托管服务"></a>9.1 常用远程仓库托管服务</h2><p>除了自己搭建服务器,其实我们可以使用一些免费的远程仓库,远程仓库有很多,常见的免费互联网远程仓库托管服务如下:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs stylus">www<span class="hljs-selector-class">.github</span><span class="hljs-selector-class">.com</span><br>www<span class="hljs-selector-class">.gitee</span><span class="hljs-selector-class">.com</span><br>www<span class="hljs-selector-class">.gitlab</span><span class="hljs-selector-class">.com</span><br><br>github  是一个基于git实现在线代码托管的仓库，向互联网开放，企业版要收钱。<br>gitee    即码云，是 oschina 免费给企业用的，不用自己搭建环境。<br>gitlab   类似 github，一般用于在企业内搭建git私服，要自己搭环境。<br><br><span class="hljs-function"><span class="hljs-title">GitHub</span><span class="hljs-params">(gitee)</span></span>、GitLab 不同点：<br><span class="hljs-number">1</span>、GitHub如果使用私有仓库是需要付费的，(<span class="hljs-number">2019</span>年开始私有仓库也是免费的但是只能<span class="hljs-number">3</span>个人协同开发,想要更多需要收费)，GitLab可以在上面搭建私人的免费仓库。<br><span class="hljs-number">2</span>、GitLab让开发团队对他们的代码仓库拥有更多的控制，相对于GitHub，它有不少的特色：<br>    (<span class="hljs-number">1</span>)允许免费设置仓库权限<br>    (<span class="hljs-number">2</span>)允许用户选择分享一个project的部分代码<br>    (<span class="hljs-number">3</span>)允许用户设置project的获取权限，进一步提升安全性<br>    (<span class="hljs-number">4</span>)可以设置获取到团队整体的改进进度<br>    (<span class="hljs-number">5</span>)通过innersourcing让不在权限范围内的人访问不到该资源<br><br></code></pre></td></tr></table></figure>
+
+<p>鉴于国内用户可能网络不好,这里我们使用gitee(码云) 来讲解我们的课程,其他可自行找资料学习非常类似</p>
+<h2 id="9-2-码云账号注册"><a href="#9-2-码云账号注册" class="headerlink" title="9.2  码云账号注册"></a>9.2  码云账号注册</h2><p><img src="/medias/img_Git_assets/1572267659865.png" srcset="/img/loading.gif" lazyload alt="1572267659865"></p>
+<p>填写邮箱发送验证码,然后可以注册账号,主页如下</p>
+<p><img src="/medias/img_Git_assets/1572268091948.png" srcset="/img/loading.gif" lazyload alt="1572268091948"></p>
+<h2 id="9-3-创建远程仓库"><a href="#9-3-创建远程仓库" class="headerlink" title="9.3 创建远程仓库"></a>9.3 创建远程仓库</h2><p><img src="/medias/img_Git_assets/1572274044100.png" srcset="/img/loading.gif" lazyload alt="1572274044100"></p>
+<p><img src="/medias/img_Git_assets/224637.png" srcset="/img/loading.gif" lazyload></p>
+<p>各个类型仓库之间的区别</p>
+<p><img src="/medias/img_Git_assets/1572274100802.png" srcset="/img/loading.gif" lazyload alt="1572274100802"></p>
+<p><img src="/medias/img_Git_assets/1572274406371.png" srcset="/img/loading.gif" lazyload alt="1572274406371"></p>
+<h2 id="9-4-把本地代码推送到远端"><a href="#9-4-把本地代码推送到远端" class="headerlink" title="9.4  把本地代码推送到远端"></a>9.4  把本地代码推送到远端</h2><p><img src="/medias/img_Git_assets/1572275202869.png" srcset="/img/loading.gif" lazyload alt="1572275202869"></p>
+<p><img src="/medias/img_Git_assets/1572275492670.png" srcset="/img/loading.gif" lazyload alt="1572275492670"></p>
+<p><img src="/medias/img_Git_assets/1572275546739.png" srcset="/img/loading.gif" lazyload alt="1572275546739"></p>
+<p>此时我们刷新仓库发现代码已经存在了</p>
+<p>我们填写的用户信息,会被保存在本地,下次提交无需填写用户名和密码</p>
+<p><img src="/medias/img_Git_assets/1572277483698.png" srcset="/img/loading.gif" lazyload alt="1572277483698"></p>
+<h2 id="9-5-从远程仓库克隆代码"><a href="#9-5-从远程仓库克隆代码" class="headerlink" title="9.5  从远程仓库克隆代码"></a>9.5  从远程仓库克隆代码</h2><p>我们同样可以从库下载代码,</p>
+<p>新建一个文件夹 repo2 ,进入然后进行如下操作</p>
+<p><img src="/medias/img_Git_assets/1572275958701.png" srcset="/img/loading.gif" lazyload alt="1572275958701"></p>
+<p>此时我们发现我们的代码已经被下载下来了</p>
+<h2 id="9-6-代码的修改与提交-查看历史"><a href="#9-6-代码的修改与提交-查看历史" class="headerlink" title="9.6  代码的修改与提交,查看历史"></a>9.6  代码的修改与提交,查看历史</h2><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xl"><span class="hljs-number">1</span>)此时我们修改代码就不能仅仅是提交到本地了,提交完毕应该推送到远端服务器<br><span class="hljs-number">2</span>)此时如果别人从远端仓库下载最新的代码其实是可以看到我们的代码修改记录的<br>   <span class="hljs-function"><span class="hljs-title">git</span> --&gt;</span>显示日志<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572277139243.png" srcset="/img/loading.gif" lazyload alt="1572277139243"></p>
+<h2 id="9-7-ssh-连接概述"><a href="#9-7-ssh-连接概述" class="headerlink" title="9.7 ssh 连接概述"></a>9.7 ssh 连接概述</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">实际上git 不仅仅支持用户名密码方式的配置,可以有另外一种相对更加安全的配置即ssh 方式配置<br></code></pre></td></tr></table></figure>
+
+<p> ssh 方式的底层原理</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">ssh连接地城是RAS加密算法,又称非对称加密,是一种现在公认的最安全的加密方式<br>数学基础好的同学可以研究一下<br>https:<span class="hljs-regexp">//</span>www.cnblogs.com<span class="hljs-regexp">/cjm123/</span>p/<span class="hljs-number">8243424</span>.html<br><br>公钥私钥加密可以看作古代 的<span class="hljs-string">&quot;虎符&quot;</span> , 我们本地电脑有一份,远程服务器有一份, 只要 <span class="hljs-string">&quot;虎符&quot;</span> 核对通过 表示身份无误,可以执行提交等操作,无需输入用户名密码<br></code></pre></td></tr></table></figure>
+
+<h2 id="9-8-ssh-密钥的生成"><a href="#9-8-ssh-密钥的生成" class="headerlink" title="9.8 ssh 密钥的生成"></a>9.8 ssh 密钥的生成</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment">#生成公钥私钥</span><br> ssh-keygen -t rsa<br> 一直回车即可<br> 会默认用户目录 <span class="hljs-string">.ssh</span> 目录生成一个默认的id_rsa文件 和id_rsa.pub<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572520139221.png" srcset="/img/loading.gif" lazyload alt="1572520139221"></p>
+<p><img src="/medias/img_Git_assets/1572520293700.png" srcset="/img/loading.gif" lazyload alt="1572520293700"></p>
+<h2 id="9-9-ssh-密钥配置"><a href="#9-9-ssh-密钥配置" class="headerlink" title="9.9 ssh 密钥配置"></a>9.9 ssh 密钥配置</h2><p><img src="/medias/img_Git_assets/1572520396806.png" srcset="/img/loading.gif" lazyload alt="1572520396806"></p>
+<h2 id="9-10-ssh-方式克隆-x2F-提交代码"><a href="#9-10-ssh-方式克隆-x2F-提交代码" class="headerlink" title="9.10 ssh 方式克隆&#x2F;提交代码:"></a>9.10 ssh 方式克隆&#x2F;提交代码:</h2><p>  配置完成之后我们克隆我们之前的项目</p>
+<p><img src="/medias/img_Git_assets/1572522118610.png" srcset="/img/loading.gif" lazyload alt="1572522118610"></p>
+<p>修改后直接提交推送即可成功,,git 会自动去.ssh 目录找我们的私钥进行匹配</p>
+<h2 id="9-11-远程仓库的其他操作"><a href="#9-11-远程仓库的其他操作" class="headerlink" title="9.11. 远程仓库的其他操作"></a>9.11. 远程仓库的其他操作</h2><p>概念</p>
+<p><img src="/medias/img_Git_assets/1572522822946.png" srcset="/img/loading.gif" lazyload alt="1572522822946"></p>
+<p>当我们从 gitee 上查看别人的项目的时候我们可能会看到上图中的按钮</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">指数:</span><br>	是gitee 网站根据当前项目的各项指标计算出来的一个值<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572523045267.png" srcset="/img/loading.gif" lazyload alt="1572523045267"></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">Star</span><span class="hljs-punctuation">:</span><br>	<span class="hljs-attribute">点赞, 注意这里的并不像朋友圈那样容易获得点赞,圈内人还是很克制的</span><br><span class="hljs-attribute">Watch</span><span class="hljs-punctuation">:</span><br>   <span class="hljs-attribute">如果你watch 了某个开源项目,那么这个项目后续所有的改动你将收到通知</span><br><span class="hljs-attribute">Fork </span><span class="hljs-punctuation">:</span><br>	<span class="hljs-attribute">将别人的代码克隆到你自己的仓库</span><br><span class="hljs-attribute">	作用一</span><span class="hljs-punctuation">:</span> <span class="hljs-string">如果担心某个优秀的项目别人突然有一天不开源了,你可以fork到自己的仓库</span><br>    <span class="hljs-attribute">作用二</span><span class="hljs-punctuation">:</span> <span class="hljs-string">修改别人的代码</span><br>	  以linux 为例,你其实不是linux 社区的开发人员,但是你 又想为linux 开发做贡献(维护代码)<br>	   你并没有权限,怎们办?<br>	   你可以先把linux 开源的代码 fork 到你自己的仓库,此时你就可以操作自己的仓库进行修改代码了<br>	   如何让别人合并你修改好的代码呢? <br>	    我们注意项目的上方有一个 &quot; Pull Request&quot; 这个按钮的意思是 &quot;请求求别人合并你修改的代码&quot;<br>	    当我们发起一个 Pull Request 时 , 项目的拥有者将收到 Pull Request请求,然后将根据你提交代码的质量决定是否合并<br></code></pre></td></tr></table></figure>
+
+<p>项目操作</p>
+<p>1)我们可以删除修改我们自己仓库的基本信息</p>
+<ol start="2">
+<li>我们可以邀请其他人成为项目的开发人员或者管理人员</li>
+</ol>
+<p><img src="/medias/img_Git_assets/1572523819666.png" srcset="/img/loading.gif" lazyload alt="1572523819666"></p>
+<p>我们可以删除修改我们自己仓库的基本信息</p>
+<p><img src="/medias/img_Git_assets/1572523928774.png" srcset="/img/loading.gif" lazyload alt="1572523928774"></p>
+<p><img src="/medias/img_Git_assets/1572523968992.png" srcset="/img/loading.gif" lazyload alt="1572523968992"></p>
+<h2 id="9-12-利用-gitee-搭建个人主页"><a href="#9-12-利用-gitee-搭建个人主页" class="headerlink" title="9.12 利用 gitee 搭建个人主页"></a>9.12 利用 gitee 搭建个人主页</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-number">1</span>)将静态资源上传至仓库<br><span class="hljs-number">2</span>) 选择服务 pages 即可部署<br>注意 <span class="hljs-number">1</span>)必须有个<span class="hljs-keyword">index</span>.html 文件<br>注意 <span class="hljs-number">2</span>) 只能搭建静态网站,动态网站请租赁服务器搭建提供服务<br>注意 <span class="hljs-number">3</span>) gitee 要求必须绑定手机号<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572525575923.png" srcset="/img/loading.gif" lazyload alt="1572525575923"></p>
+<p>点击开启后gitee 会自动生成一个域名</p>
+<p><img src="/medias/img_Git_assets/1572526097257.png" srcset="/img/loading.gif" lazyload alt="1572526097257"></p>
+<p>直接访问即可</p>
+<p>此时我们已经在git 上部署了一个静态的网站</p>
+<p><img src="/medias/img_Git_assets/1572526136074.png" srcset="/img/loading.gif" lazyload alt="1572526136074"></p>
+<h1 id="10-命令行–-git基本操作"><a href="#10-命令行–-git基本操作" class="headerlink" title="10.命令行– git基本操作"></a>10.命令行– git基本操作</h1><h2 id="10-1-介绍"><a href="#10-1-介绍" class="headerlink" title="10.1  介绍"></a>10.1  介绍</h2><p>​	上述我们的操作 使用的 是客户端TortoiseGit 操作的git ,实际上底层依旧是使用的命令行帮我们执行, 在早期 git 并没有窗口化工具,开发人员只能使用命令行模式</p>
+<p>  实际上,如果你掌握并熟练使用了命令行模式操作git 的话,你会发现某些操作命令行比窗口化操作要简单</p>
+<p>所有你在工作中会发现高深的技术人员可能会喜欢命令行模式提交git</p>
+<p>##10.2 环境配置</p>
+<p>当安装Git后首先要做的事情是设置用户名称和email地址。这是非常重要的，因为每次Git提交都会使用该用户信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">设置用户信息</span> <br>   git config --global user.name “itcast”<br>   git config --global user.email “itcast@itcast.cn”<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看配置信息</span><br>   git config --list<br>   git config user.name<br><span class="hljs-meta prompt_">#</span><span class="language-bash">通过上面的命令设置的信息会保存在~/.gitconfig文件中</span><br><br></code></pre></td></tr></table></figure>
+
+<p>##10.3  初始化本地仓库 init</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">初始化仓库带工作区</span><br>git init<br><span class="hljs-meta prompt_"># </span><span class="language-bash">初始化仓库不带工作区</span><br>git init --bare  <br></code></pre></td></tr></table></figure>
+
+<p>##10.4 克隆 clone</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">从远程仓库克隆</span><br>git clone 远程Git仓库地址 <br>例如: git clone https://gitee.com/itcast/gittest.git<br></code></pre></td></tr></table></figure>
+
+<p>##10.5  查看状态 status</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">查看状态</span><br>git status <br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看状态 使输出信息更加简洁</span><br>git status –s <br></code></pre></td></tr></table></figure>
+
+<p>##10.6 add </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">将未跟踪的文件加入暂存区</span><br>git add  &lt;文件名&gt;  <br><span class="hljs-meta prompt_"># </span><span class="language-bash">将暂存区的文件取消暂存 (取消 add )</span><br>git reset  &lt;文件名&gt;  <br><br></code></pre></td></tr></table></figure>
+
+<p>##10.7 commit</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">git commit 将暂存区的文件修改提交到本地仓库</span><br>git commit -m &quot;日志信息&quot;  &lt;文件名&gt;  <br><br></code></pre></td></tr></table></figure>
+
+<p>##10.8 删除 rm</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">从本地工作区 删除文件</span><br>git rm &lt;文件名&gt;  <br><span class="hljs-meta prompt_"># </span><span class="language-bash">如果本工作区库误删, 想要回退</span><br>git checkout head &lt;文件名&gt;  <br></code></pre></td></tr></table></figure>
+
+<h1 id="11-命令行–git-远程仓库操作"><a href="#11-命令行–git-远程仓库操作" class="headerlink" title="11. 命令行–git 远程仓库操作"></a>11. 命令行–git 远程仓库操作</h1><h2 id="11-1-查看远程"><a href="#11-1-查看远程" class="headerlink" title="11.1    查看远程"></a>11.1    查看远程</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">查看远程  列出指定的每一个远程服务器的简写</span><br>git remote <br><span class="hljs-meta prompt_"># </span><span class="language-bash">查看远程 , 列出 简称和地址</span><br>git remote  -v  <br><span class="hljs-meta prompt_"># </span><span class="language-bash">查看远程仓库详细地址</span><br>git remote show  &lt;仓库简称&gt;<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="11-2-添加-x2F-移除远测仓库"><a href="#11-2-添加-x2F-移除远测仓库" class="headerlink" title="11.2 添加&#x2F;移除远测仓库"></a>11.2 添加&#x2F;移除远测仓库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">添加远程仓库</span><br>git remote add &lt;shortname&gt; &lt;url&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">移除远程仓库和本地仓库的关系(只是从本地移除远程仓库的关联关系，并不会真正影响到远程仓库)</span><br>git remote rm &lt;shortname&gt; <br></code></pre></td></tr></table></figure>
+
+<h2 id="11-3-从远程仓库获取代码"><a href="#11-3-从远程仓库获取代码" class="headerlink" title="11.3 从远程仓库获取代码"></a>11.3 从远程仓库获取代码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">从远程仓库克隆</span><br>git clone &lt;url&gt; <br><span class="hljs-meta prompt_"># </span><span class="language-bash">从远程仓库拉取 (拉取到.git 目录,不会合并到工作区,工作区发生变化)</span><br>git fetch  &lt;shortname&gt;  &lt;分支名称&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">手动合并  把某个版本的某个分支合并到当前工作区</span><br>git merge &lt;shortname&gt;/&lt;分支名称&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">从远程仓库拉取 (拉取到.git 目录,合并到工作区,工作区不发生变化) = fetch+merge</span><br>git pull  &lt;shortname&gt;  &lt;分支名称&gt;<br>git pull  &lt;shortname&gt;  &lt;分支名称&gt;  --allow-unrelated-histories  #  强制拉取合并<br></code></pre></td></tr></table></figure>
+
+<p>注意：如果当前本地仓库不是从远程仓库克隆，而是本地创建的仓库，并且仓库中存在文件，此时再从远程仓库拉取文件的时候会报错（fatal: refusing to merge unrelated histories ），解决此问题可以在git pull命令后加入参数–allow-unrelated-histories (如上 命令)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">将本地仓库推送至远程仓库的某个分支</span><br>git push [remote-name] [branch-name]<br></code></pre></td></tr></table></figure>
+
+<h1 id="12-命令行–-分支"><a href="#12-命令行–-分支" class="headerlink" title="12.  命令行– 分支"></a>12.  命令行– 分支</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">默认 分支名称为 master</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">列出所有本地分支</span><br>git branch<br><span class="hljs-meta prompt_"># </span><span class="language-bash">列出所有远程分支</span><br>git branch -r<br><span class="hljs-meta prompt_"># </span><span class="language-bash">列出所有本地分支和远程分支</span><br>git branch -a<br><span class="hljs-meta prompt_"># </span><span class="language-bash">创建分支</span><br>git branch &lt;分支名&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">切换分支</span> <br>git checkout &lt;分支名&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">删除分支(如果分支已经修改过,则不允许删除)</span><br>git branch -d  &lt;分支名&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">强制删除分支</span><br>git branch -D  &lt;分支名&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">提交分支至远程仓库</span><br>git push &lt;仓库简称&gt; &lt;分支名称&gt;	<br><span class="hljs-meta prompt_"># </span><span class="language-bash">合并分支 将其他分支合并至当前工作区</span><br>git merge &lt;分支名称&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">删除远程仓库分支</span><br>git push origin –d branchName<br></code></pre></td></tr></table></figure>
+
+<h1 id="13-命令行-–tag"><a href="#13-命令行-–tag" class="headerlink" title="13 . 命令行 –tag"></a>13 . 命令行 –tag</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">列出所有tag</span><br>git tag<br><span class="hljs-meta prompt_"># </span><span class="language-bash">查看tag详细信息</span> <br>git show [tagName]<br><span class="hljs-meta prompt_"># </span><span class="language-bash">新建一个tag</span><br>git tag [tagName]<br><span class="hljs-meta prompt_"># </span><span class="language-bash">提交指定tag</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git push [仓库简称] [tagName]</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">新建一个分支，指向某个tag</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git checkout -b [branch] [tag]</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">删除本地tag</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git tag -d [tag]</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">删除远程tag (注意 空格)</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git push origin :refs/tags/[tag]</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="14-案例"><a href="#14-案例" class="headerlink" title="14. 案例"></a>14. 案例</h1><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">企业中我们是如何开发的<br>1) 入职第一天,管理人员分配/git账号密码 <br>2) 开发人员下载代码即文档/ 根据文档将环境搭建成功<br><span class="hljs-section">3) 团队一般会给你讲讲项目相关的支持</span><br><span class="hljs-section">----</span><br>4) 你接到第一个需求(或者某个功能,一般要经过沟通,分析,设计...等过程)<br>5) 创建feature分支(一般一个需求对应一个feature,命名格式上标注该需求的id)<br>6) 开发需求,本地测试,提交代码到当前需求对应的feature分支,<br><span class="hljs-code">	一般来讲为了避免将测试代码提交,需要提交前,检查如下步骤</span><br><span class="hljs-code">	6.1) 是否多提交了某个文件,比如测试文件</span><br><span class="hljs-code">	6.2) 是否漏提交文件</span><br><span class="hljs-code">	6.3) 打开每一个应该提交的文件,判断是否多提交了一行代码,是否少提交了一行代码,是否删除了本应该存在的代码 </span><br><span class="hljs-code">	检查完毕提交代码</span><br>7) 合并分支至test分支-- 测试人员会在test分支中测试<br>8) 测试人员测试bug ,开发者在feature分支上继续修改,提交<br>9) 测试人员测试通过 ,test分支会被测试人员合并到develop开发分支,再次测试<br>10)develop分支最终会被合并到master主分支<br><br><br><br><br><br><br><br><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<p>&#96;</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/git/" class="category-chain-item">git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Git (3)</div>
+      <div>https://iexlee.github.io/43、Git教程.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>李翔的博客</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/42%E3%80%81Git%E6%95%99%E7%A8%8B.html" title="Git (2)">
+                        <span class="hidden-mobile">Git (2)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,894 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="李翔的博客">
+  <meta name="keywords" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+  
+    <meta name="description" content="第07章_InnoDB数据存储结构1.数据库的存储结构:页 ​	1.1磁盘与内存交互基本单位:页 ​	1.2页结构概述 ​	1.3页的大小 ​	1.4页的上层结构 2.页的内部结构​	 第1部分:File Header(文件头部）和File Trailer (文件尾部) 1.数据库的存储结构:页索引结构给我们提供了高效的索引方式，不过索引信息以及数据记录都是保存在文件上的，确切说是存储在页结构中。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 索引的数据结构">
+<meta property="og:url" content="https://iexlee.github.io/12%E3%80%81InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.html">
+<meta property="og:site_name" content="xLee&#39;s blog">
+<meta property="og:description" content="第07章_InnoDB数据存储结构1.数据库的存储结构:页 ​	1.1磁盘与内存交互基本单位:页 ​	1.2页结构概述 ​	1.3页的大小 ​	1.4页的上层结构 2.页的内部结构​	 第1部分:File Header(文件头部）和File Trailer (文件尾部) 1.数据库的存储结构:页索引结构给我们提供了高效的索引方式，不过索引信息以及数据记录都是保存在文件上的，确切说是存储在页结构中。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://iexlee.github.io/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/cover.png">
+<meta property="article:published_time" content="2022-08-02T01:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-19T15:53:01.896Z">
+<meta property="article:author" content="李翔的博客">
+<meta property="article:tag" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iexlee.github.io/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/cover.png">
+  
+  
+  
+  <title>MySQL 索引的数据结构 - xLee&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iexlee.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="xLee's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>xLee&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySQL 索引的数据结构"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-02 09:00" pubdate>
+          2022年8月2日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          95 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MySQL 索引的数据结构</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="第07章-InnoDB数据存储结构"><a href="#第07章-InnoDB数据存储结构" class="headerlink" title="第07章_InnoDB数据存储结构"></a>第07章_InnoDB数据存储结构</h1><p>1.数据库的存储结构:页</p>
+<p>​	1.1磁盘与内存交互基本单位:页</p>
+<p>​	1.2页结构概述</p>
+<p>​	1.3页的大小</p>
+<p>​	1.4页的上层结构</p>
+<p>2.页的内部结构<br>​	</p>
+<p>第1部分:File Header(文件头部）和File Trailer (文件尾部)</p>
+<h2 id="1-数据库的存储结构-页"><a href="#1-数据库的存储结构-页" class="headerlink" title="1.数据库的存储结构:页"></a>1.数据库的存储结构:页</h2><p>索引结构给我们提供了高效的索引方式，不过索引信息以及数据记录都是保存在文件上的，确切说是存储在页结构中。另一方面，索引是在存储引擎中实现的，MySQL服务器上的<strong>存储引擎</strong>负责对表中数据的读取和写入工作。不同存储引擎中<strong>存放的格式</strong>一般是不同的，甚至有的存储引擎比如Memory都不用磁盘来存储数据。</p>
+<p>由于InnoDB是MySQL的默认存储引擎，所以本章剖析InnoDB存储引擎的数据存储结构。</p>
+<h3 id="1-1磁盘与内存交互基本单位-页"><a href="#1-1磁盘与内存交互基本单位-页" class="headerlink" title="1.1磁盘与内存交互基本单位:页"></a>1.1磁盘与内存交互基本单位:页</h3><p>InnoDB将数据划分为若干个页，InnoDB中页的大小默认为 <strong>16KB</strong></p>
+<p>以<code>页</code>作为磁盘和内存之间交互的<code>基本单位</code>，也就是一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。也就是说，<strong>在数据库中，不论读一行，还是读多行，都是将这些行所在的页进行加载。也就是说，数据库管理存储空间的基本单位是页(Page)，数据库I&#x2F;O操作的最小单位是页。</strong>一个页中可以存储多个行记录</p>
+<blockquote>
+<p>记录是按照行来存储的，但是数据库的读取并不以行为单位，否则一次读取（也就是一次I&#x2F;O操作)只能处理一行数据，效率会非常低。</p>
+</blockquote>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220324200116204.png" srcset="/img/loading.gif" lazyload alt="image-20220324200116204"></p>
+<h3 id="1-2页结构概述"><a href="#1-2页结构概述" class="headerlink" title="1.2页结构概述"></a>1.2页结构概述</h3><p>页a、页b、页c …页n这些页可以不<code>在物理结构上相连</code>，只要通过<code>双向链表</code>相关联即可。每个数据页中的记录会按照主键值从小到大的顺序组成一个<code>单向链表</code>，每个数据页都会为存储在它里边的记录生成一个<code>页目录</code>，在通过主键查找某条记录的时候可以在页目录<code>中使用二分法</code>快速定位到对应的槽，然后再遍历该槽对应分组中的记录即可快速找到指定的记录。</p>
+<h3 id="1-3页的大小"><a href="#1-3页的大小" class="headerlink" title="1.3页的大小"></a>1.3页的大小</h3><p>不同的数据库管理系统（简称DBMS）的页大小不同。比如在MySQL的InnoDB存储引擎中，默认页的大小是<strong>16KB</strong>，可以通过下面的命令来进行查看:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">show variables like <span class="hljs-string">&#x27;%innodb_page_size%&#x27;</span>;<br>/*<br>+------------------+-------+<br>| Variable_name    | Value |<br>+------------------+-------+<br>| innodb_page_size | 16384 |<br>+------------------+-------+<br>*/<br></code></pre></td></tr></table></figure>
+
+
+
+<p>SQL Server中页的大小为 <code>8KB</code>，而在oracle中用术语’’<code>块</code>’’(Block)来代表”页”，Oralce支持的块大小为2KB，4KB，8KB，16K8，32KB和64KB。</p>
+<h3 id="1-4页的上层结构"><a href="#1-4页的上层结构" class="headerlink" title="1.4页的上层结构"></a>1.4页的上层结构</h3><p>另外在数据库中，还存在区（Extent)、段(Segment)和表空间（Tablespace)的概念。行、页、区、段、表空间的关系如下图所示:</p>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220324200502569.png" srcset="/img/loading.gif" lazyload alt="image-20220324200502569"></p>
+<p>区(Extent)是比页大一级的存储结构，在InnoDB存储引擎中，一个区会分配<code>64个连续的页</code>。因为InnoDB中的页大小默认是16KB，所以一个区的大小是64*16KB&#x3D; 1MB。</p>
+<p>段(Segment)由一个或多个区组成，区在文件系统是一个连续分配的空间（在InnoDB中是连续的64个页)，不过在段中不要求区与区之间是相邻的。<code>段是数据库中的分配单位，不同类型的数据库对象以不同的段形式存在。</code> 当创建数据表、索引的时候，就会相应创建对应的段，比如创建一张表时会创建一个表段，创建一个索引时会创建一个索引段。</p>
+<p>表空间（Tablespace)是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间，<code>用户表空间</code>、<code>撤销表空间</code>、<code>临时表空间</code>等。</p>
+<h2 id="2-页的内部结构"><a href="#2-页的内部结构" class="headerlink" title="2.页的内部结构"></a>2.页的内部结构</h2><p>页如果按类型划分的话，常见的有<code>数据页（保存B+树节点）</code>、<code>系统页</code>、<code>Undo页</code>和<code>事务数据页</code>等。数据页是我们最常使用的页。<br>数据页的<code>16KB</code>大小的存储空间被划分为七个部分，分别是文件头(File Header)、页头(Page Header)、最大最小记录(Infimum+supremum)、用户记录(User Records)、空闲空间(Free Space)、页目录(Page Directory)和文件尾(File Tailer) 。</p>
+<p>页结构的示意图如下所示:</p>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220324200934245.png" srcset="/img/loading.gif" lazyload alt="image-20220324200934245"></p>
+<p>这7个部分作用分别如下，简单梳理如下表所示:</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用大小</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File Header</td>
+<td>38字节</td>
+<td>文件头，描述页的信息</td>
+</tr>
+<tr>
+<td>Page Header</td>
+<td>56字节</td>
+<td>页头,页的状态信息</td>
+</tr>
+<tr>
+<td>lnfimum-Supremum</td>
+<td>26字节</td>
+<td>最大和最小记录，这是两个虚拟的行记录</td>
+</tr>
+<tr>
+<td>User Records</td>
+<td>不确定</td>
+<td>用户记录，存储行记录内容</td>
+</tr>
+<tr>
+<td>Free Space</td>
+<td>不确定</td>
+<td>空闲记录，页中还没有被使用的空间</td>
+</tr>
+<tr>
+<td>Page Directory</td>
+<td>不确定</td>
+<td>页目录，存储用户记录的相对位置</td>
+</tr>
+<tr>
+<td>File Trailer</td>
+<td>8字节</td>
+<td>文件尾,校验页是否完整</td>
+</tr>
+</tbody></table>
+<p>我们可以把这7个结构分成3个部分</p>
+<h3 id="第1部分-File-Header-文件头部）和File-Trailer-文件尾部"><a href="#第1部分-File-Header-文件头部）和File-Trailer-文件尾部" class="headerlink" title="第1部分: File Header(文件头部）和File Trailer (文件尾部)"></a>第1部分: File Header(文件头部）和File Trailer (文件尾部)</h3><p>首先是<code>文件通用部分</code>，也就是<code>文件头</code>和<code>文件尾</code>。</p>
+<p><strong>① 文件头部信息</strong></p>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220324201808920.png" srcset="/img/loading.gif" lazyload alt="image-20220324201808920"></p>
+<h3 id="2-3-从数据页角度看B-树如何查询"><a href="#2-3-从数据页角度看B-树如何查询" class="headerlink" title="2.3 从数据页角度看B + 树如何查询"></a>2.3 从数据页角度看B + 树如何查询</h3><p>一棵B+树按照节点类型可以分成两部分:<br>1．叶子节点，B+树最底层的节点，节点的高度为o，存储行记录。<br>2．非叶子节点，节点的高度大于0，存储索引键和页面指针，并不存储行记录本身。</p>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220324224809508.png" srcset="/img/loading.gif" lazyload alt="image-20220324224809508"></p>
+<p>当我们从页结构来理解B+树的结构的时候，可以帮我们理解一些通过索引进行检索的原理:</p>
+<p><strong>1.B+树是如何进行记录检索的?</strong></p>
+<p>如果通过B+树的索引查询行记录，首先是从B+树的根开始，逐层检索，直到找到叶子节点，也就是找到对应的数据页为止，将数据页加载到内存中，页目录中的槽(slot)采用<code>二分查找</code>的方式先找到一个粗略的记录分组然后再在分组中通过<code>链表遍历</code>的方式查找记录。</p>
+<p><strong>2.普通索引和唯一索引在查询效率上有什么不同?</strong></p>
+<p>我们创建索引的时候可以是普通索引，也可以是唯一索引，那么这两个索引在查询效率上有什么不同呢?</p>
+<p>唯一索引就是在普通索引上增加了约束性，也就是关键字唯一，找到了关键字就停止检索。而普通索引，可能会存在用户记录中的关键字相同的情况，根据页结构的原理，当我们读取一条记录的时候，不是单独将这条记录从磁盘中读出去，而是将这个记录所在的页加载到内存中进行读取。InnoDB存储引擎的页大小为16KB，在一个页中可能存储着上千个记录，因此在普通索引的字段上进行查找也就是在内存中多几次“<code>判断下一条记录</code>”的操作，对于CPU来说，这些操作所消耗的时间是可以忽略不计的。所以对一个索引字段进行检索，采用普通索引还是唯一索引在检索效率上基本上没有差别。</p>
+<h2 id="3-InnoDB行格式-或记录格式"><a href="#3-InnoDB行格式-或记录格式" class="headerlink" title="3.InnoDB行格式(或记录格式)"></a>3.InnoDB行格式(或记录格式)</h2><p>我们平时的数据以行为单位来向表中插入数据，这些记录在磁盘上的存放方式也被称为行格式或者记录格式。</p>
+<p>InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact（紧密）、Redundant（冗余）、Dynamic（动态）和Compressed（压缩）行格式。查看</p>
+<p>MySQL8 与 MySQL5.7的默认行格式:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt; <span class="hljs-keyword">select</span> @@innodb_default_row_format;<br>+-----------------------------+<br>| @@innodb_default_row_format |<br>+-----------------------------+<br>| dynamic                     |<br>+-----------------------------+<br>1 row <span class="hljs-keyword">in</span> <span class="hljs-built_in">set</span> (0.00 sec)<br><br><span class="hljs-comment"># 查询单张表行格式</span><br>mysql&gt; show table status like <span class="hljs-string">&#x27;departments&#x27;</span> \G<br>*************************** 1. row ***************************<br>           Name: departments<br>         Engine: InnoDB<br>        Version: 10<br> <span class="hljs-comment">#行格式  Row_format: Dynamic</span><br>           Rows: 27<br> Avg_row_length: 606<br>    Data_length: 16384<br>Max_data_length: 0<br>   Index_length: 49152<br>      Data_free: 0<br> Auto_increment: NULL<br>    Create_time: 2022-03-23 14:56:38<br>    Update_time: 2022-03-23 14:56:38<br>     Check_time: NULL<br>      Collation: utf8_general_ci<br>       Checksum: NULL<br> Create_options:<br>        Comment:<br>1 row <span class="hljs-keyword">in</span> <span class="hljs-built_in">set</span> (0.01 sec)<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-区、段与碎片区"><a href="#4-区、段与碎片区" class="headerlink" title="4.区、段与碎片区"></a>4.区、段与碎片区</h2><h3 id="4-1为什么要有区"><a href="#4-1为什么要有区" class="headerlink" title="4.1为什么要有区?"></a>4.1为什么要有区?</h3><p><code>B+</code>树的每一层中的页都会形成一个双向链表，如果是以<code>页为单位</code>来分配存储空间的话，双向链表相邻的两个页之间的<code>物理位置</code>可能离得非常远。我们介绍B+树索引的适用场景的时候特别提到范围查询只需要定位到最左边的记录和最右边的记录,然后沿着双向链表一直扫描就可以了，而如果链表中相邻的两个页物理位置离得非常远，就是所谓的<code>随机I/0</code>。再一次强调，磁盘的速度和内存的速度差了好几个数量级，<code>随机I/0是非常慢的</code>，所以我们应该尽量让链表中相邻的页的物理位置也相邻，这样进行范围查询的时候才可以使用所谓的<code>顺序I/0</code>。</p>
+<blockquote>
+<p>这样利用了磁盘的预读特性</p>
+</blockquote>
+<p>[查看4.n 扩展 理解mysql如何利用预读特性](#4.n 扩展)</p>
+<p>引入<code>区</code>的概念，一个区就是在物理位置上<strong>连续</strong>的<code>64个页</code>。因为InnoDB 中的页大小默认是16KB，所以一个区的大小是64*16KB&#x3D;<code>1MB</code>。在表中<code>数据量大</code>的时候，为某个索引分配空间的时候就不再按照页为单位分配了，而是按照<code>区为单位</code>分配，甚至在表中的数据特别多的时候，可以一次性分配多个连续的区。虽然可能造成<code>一点点空间的浪费</code>（数据不足以填充满整个区)，但是从性能角度看，可以消除很多的随机I&#x2F;O，<code>功大于过</code>!</p>
+<blockquote>
+<p>这里是连续的64个页， 但是具体的两个页之间还是用指针相连的。保证一大块区域连续。</p>
+</blockquote>
+<h3 id="4-2为什么要有段"><a href="#4-2为什么要有段" class="headerlink" title="4.2为什么要有段?"></a>4.2为什么要有段?</h3><p>对于范围查询，其实是对B+树叶子节点中的记录进行顺序扫描，而如果不区分叶子节点和非叶子节点，统统把节点代表的页面放到申请到的区中的话，进行范围扫描的效果就大打折扣了。所以InnoDB对B+树的<code>叶子节点</code>和<code>非叶子节点</code>进行了区别对待，也就是说叶子节点有自己独有的区，非叶子节点也有自己独有的区。存放叶子节点的区的集合就算是一个<code>段( segment)</code>，存放非叶子节点的区的集合也算是一个段。也就是说一个索引会生成2个段，一个<code>叶子节点段</code>，一个<code>非叶子节点段</code>。</p>
+<p>除了索引的叶子节点段和非叶子节点段之外，InnoDB中还有为存储一些特殊的数据而定义的段，比如回滚段。所以，常见的段有<code>数据段</code>、<code>索引段</code>、<code>回滚段</code>。数据段即为B+树的叶子节点，索引段即为B+树的非叶子节点。</p>
+<p>在InnoDB存储引擎中，对段的管理都是由引擎自身所完成，DBA不能也没有必要对其进行控制。这从一定程度上简化了DBA对于段的管理。</p>
+<p>段其实不对应表空间中某一个连续的物理区域，而是一个逻辑上的概念，由若干个零散的页面以及一些完整的区组成。</p>
+<blockquote>
+<p>零散的页面，看碎片区</p>
+</blockquote>
+<h3 id="4-3为什么要有碎片区"><a href="#4-3为什么要有碎片区" class="headerlink" title="4.3为什么要有碎片区?"></a>4.3为什么要有碎片区?</h3><p>默认情况下，一个使用InnoDB存储引擎的表只有一个聚簇索引，一个索引会生成2个段，而段是以区为单位申请存储空间的，一个区默认占用1M (64*16Kb&#x3D;1024Kb）存储空间，所以<strong>默认情况下一个只存了几条记录的小表也需要2M的存储空间么?<strong>以后每次添加一个索引都要多申请2M的存储空间么?这对于存储记录比较少的表简直是天大的浪费。这个问题的症结在于到现在为止我们介绍的区都是非常</strong>纯粹的</strong>，也就是一个区被整个分配给某一个段，或者说区中的所有页面都是为了存储同一个段的数据而存在的，即使段的数据填不满区中所有的页面，那余下的页面也不能挪作他用。</p>
+<p>为了考虑以完整的区为单位分配给某个段对于<code>数据量较小</code>的表太浪费存储空间的这种情况，InnoDB提出了一个<code>碎片(fragment)区</code>的概念。在一个碎片区中，并不是所有的页都是为了存储同一个段的数据而存在的，而是碎片区中的页可以用于不同的目的，比如有些页用于段A，有些页用于段B，有些页甚至哪个段都不属于。<code>碎片区直属于表空间</code>，并不属于任何一个段。</p>
+<p>所以此后为某个段分配存储空间的策略是这样的:</p>
+<ul>
+<li>在刚开始向表中插入数据的时候，段是从某个碎片区以单个页面为单位来分配存储空间的</li>
+<li>当某个段已经占用了<code>32个碎片区</code>页面之后，就会申请以完整的区为单位来分配存储空间。</li>
+</ul>
+<p>所以现在段不能仅定义为是某些区的集合，更精确的应该是<strong>某些零散的页面</strong>以及<strong>一些完整的区</strong>的集合。</p>
+<h3 id="4-4区的分类"><a href="#4-4区的分类" class="headerlink" title="4.4区的分类"></a>4.4区的分类</h3><p>区大体上可以分为4种类型:</p>
+<ul>
+<li><code>空闲的区(FREE)</code>:  现在还没有用到这个区中的任何页面。</li>
+<li><code>有剩余空间的碎片区(FREE_FRAG):</code>  表示碎片区中还有可用的页面。</li>
+<li><code>没有剩余空间的碎片区(FULL_FRAG)</code>︰表示碎片区中的所有页面都被使用，没有空闲页面。</li>
+<li><code>附属于某个段的区(FSEG):</code>每一个索引都可以分为叶子节点段和非叶子节点段。</li>
+</ul>
+<p>处于<code>FREE</code>、<code>FREE_FRAG</code>以及<code>FULL_FRAG</code>这三种状态的区都是独立的，直属于表空间。而处于FSEG状态的区是附属于某个段的。</p>
+<blockquote>
+<p>如果把表空间比作是一个集团军，段就相当于师，区就相当于团。一般的团都是隶属于某个师的，就像是处于<code>FSEG</code>的区全都隶属于某个段，而处于<code>FREE</code>、<code>FREE_FRAG</code>以及<code>FULL_FRAG</code>这三种状态的区却直接隶属于表空间，就像独立团直接听命于军部一样。</p>
+</blockquote>
+<h3 id="4-n-扩展"><a href="#4-n-扩展" class="headerlink" title="4.n 扩展"></a>4.n 扩展</h3><p>那么，计算机怎样才能判断一个数据接下来可能被用到？</p>
+<blockquote>
+<p>时间局部性（Temporal Locality）</p>
+</blockquote>
+<p>时间局部性：如果一个信息项正在被访问，那么在近期它很可能还会被再次访问。</p>
+<p>&#x2F;&#x2F; 这是可以理解的，用过的数据当然可能再次被用到。</p>
+<blockquote>
+<p>空间局部性（Spatial Locality）</p>
+</blockquote>
+<p> 空间局部性：在最近的将来将用到的信息很可能与现在正在使用的信息在空间地址上是临近的。</p>
+<p>&#x2F;&#x2F; 正在使用的某个数据地址旁边的数据，当然也是很可能被用到的，比如某个数组、集合等等。</p>
+<blockquote>
+<p>顺序局部性（Order Locality）</p>
+</blockquote>
+<p> 顺序局部性：在典型程序中，除转移类指令外，大部分指令是顺序进行的。顺序执行和非顺序执行的比例大致是5:1。此外，对大型数组访问也是顺序的。</p>
+<p>指令的顺序执行、数组的连续存放等是产生顺序局部性的原因。</p>
+<p>&#x2F;&#x2F; 正在执行的某个指令以及还在排队等候处理的指令，大部分是按照顺序来执行的。</p>
+<blockquote>
+<p>磁盘预读原理</p>
+</blockquote>
+<p> 内存比磁盘的读写速度要快很多，但内存容量要远小于磁盘，而数据、程序的执行要调入内存后才能执行，所以内存和磁盘要经常进行I&#x2F;O操作，I&#x2F;O操作是个费事的过程，虽然现代系统已经有了通道（I&#x2F;O处理机）技术的支持，但这远远不够（CPU的处理速度远远大于磁盘I&#x2F;O的速度）。</p>
+<p><strong>所以磁盘读取的时候会顺带加载附近的数据到缓存</strong></p>
+<blockquote>
+<p> 磁盘读取（详细）</p>
+</blockquote>
+<p>磁盘存取，磁盘I&#x2F;O涉及机械操作。磁盘是由大小相同且同轴的圆形盘片组成，磁盘可以转动(各个磁盘须同时转动)。磁盘的一侧有磁头支架，磁头支架固定了一组磁头，每个磁头负责存取一个磁盘的内容。磁头不动，磁盘转动，但磁臂可以前后动，用于读取不同磁道上的数据。磁道就是以盘片为中心划分出来的一系列同心环。磁道又划分为一个个小段，叫扇区，是磁盘的最小存储单元。 </p>
+<p>磁盘读取时，系统将数据逻辑地址传给磁盘，磁盘的控制电路会解析出物理地址（哪个磁道，哪个扇区），于是磁头需要前后移动到相应的磁道——寻道，消耗的时间叫——寻道时间，磁盘旋转将对应的扇区转到磁头下（磁头找到对应磁道的对应扇区），消耗的时间叫——旋转时间，这一系列操作是非常耗时。</p>
+<h4 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h4><p>为了尽量减少I&#x2F;O操作，计算机系统一般采取预读的方式，预读的长度一般为页（page）的整倍数。页是计算机管理存储器的逻辑块，硬件及操作系统往往将主存和磁盘存储区分割为连续的大小相等的块，每个存储块称为一页（在许多操作系统中，页得大小通常为4k），主存和磁盘以页为单位交换数据。当程序要读取的数据不在主存中时，会触发一个缺页异常，此时系统会向磁盘发出读盘信号，磁盘会找到数据的起始位置并向后<code>连续读取一页或几页载入内存中</code>，然后异常返回，程序继续运行。</p>
+<p>计算机系统是分页读取和存储的，一般一页为4KB（8个扇区，每个扇区125B，8<em>125B&#x3D;4KB），每次读取和存取的最小单元为一页，而</em>*<code>磁盘预读时通常会读取页的整倍数</code>**。根据文章上述的【局部性原理】①当一个数据被用到时，其附近的数据也通常会马上被使用。②程序运行期间所需要的数据通常比较集中。由于磁盘顺序读取的效率很高（不需要寻道时间，只需很少的旋转时间），所以即使只需要读取一个字节，磁盘也会读取一页的数据。</p>
+<p>至于磁盘分页，参考计算机操作系统的分页，分段存储管理——逻辑地址和物理地址被分为大小相同的页面，逻辑地址中叫页，物理地址中叫块。</p>
+<h4 id="为什么使用B-Tree-x2F-B-Tree"><a href="#为什么使用B-Tree-x2F-B-Tree" class="headerlink" title="为什么使用B-Tree&#x2F;B+Tree"></a>为什么使用B-Tree&#x2F;B+Tree</h4><p>二叉查找树进化品种的红黑树等数据结构也可以用来实现索引，但是文件系统及数据库系统普遍采用B-Tree&#x2F;B+Tree作为索引结构。</p>
+<p>一般来说，索引本身也很大，不可能全部存储在内存中，因此索引往往以索引文件的形式存储的磁盘上。这样的话，索引查找过程中就要产生磁盘I&#x2F;O消耗，相对于内存存取，I&#x2F;O存取的消耗要高几个数量级，所以评价一个数据结构作为索引的优劣最重要的指标就是在查找过程中磁盘I&#x2F;O操作次数的渐进复杂度。换句话说，索引的结构组织要尽量减少查找过程中磁盘I&#x2F;O的存取次数。</p>
+<p>分析B-Tree&#x2F;B+Tree检索一次最多需要访问节点：</p>
+<p>h&#x3D;<img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/format,png.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>数据库系统巧妙利用了磁盘预读原理，将<code>一个节点的大小设为等于一个页</code>，这样每个节点只需要一次I&#x2F;O就可以完全载入。为了达到这个目的，在实际实现B-Tree还需要使用如下技巧：</p>
+<pre><code class="hljs">  每次新建节点时，直接申请一个页的空间，这样就保证一个节点物理上也存储在一个页里，加之计算机存储分配都是按页对齐的，就实现了一个node只需一次I/O。
+</code></pre>
+<p>　　B-Tree中一次检索最多需要h-1次I&#x2F;O（根节点常驻内存），渐进复杂度为O（h）&#x3D;O（logmN）。一般实际应用中，m是非常大的数字，通常超过100，因此h非常小（通常不超过3）。</p>
+<p>　　综上所述，用B-Tree作为索引结构效率是非常高的。</p>
+<p>　　而红黑树这种结构，h明显要深的多。由于逻辑上很近的节点（父子）物理上可能很远，无法利用局部性，所以红黑树的I&#x2F;O渐进复杂度也为O（h），效率明显比B-Tree差很多。</p>
+<p><strong>B树与B+Tree</strong></p>
+<p>B-Tree：如果一次检索需要访问4个节点，数据库系统设计者利用磁盘预读原理，把节点的大小设计为一个页，那读取一个节点只需要一次I&#x2F;O操作，完成这次检索操作，最多需要3次I&#x2F;O(根节点常驻内存)。数据记录越小，每个节点存放的数据就越多，树的高度也就越小，I&#x2F;O操作就少了，检索效率也就上去了。</p>
+<p>B+Tree：非叶子节点只存key，大大滴减少了非叶子节点的大小，那么每个节点就可以存放更多的记录，树更矮了，I&#x2F;O操作更少了。所以B+Tree拥有更好的性能。</p>
+<h2 id="5-表空间"><a href="#5-表空间" class="headerlink" title="5.表空间"></a>5.表空间</h2><p>表空间可以看做是InnoDB存储引擎逻辑结构的最高层，所有的数据都存放在表空间中。</p>
+<p>表空间是一个<code>逻辑容器</code>，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。表空间数据库由一个或多个表空间组成，表空间从管理上可以划分为<code>系统表空间</code> (System<br>tablespace)、<code>独立表空间</code>(File-per-table tablespace)、<code>撤销表空间</code>(Undo Tablespace)和<code>临时表空间</code>(Temporary Tablespace）等。</p>
+<h3 id="5-1独立表空间"><a href="#5-1独立表空间" class="headerlink" title="5.1独立表空间"></a>5.1独立表空间</h3><p>独立表空间，即每张表有一个独立的表空间，也就是数据和索引信息都会保存在自己的表空间中。独立的表空间(即:单表)可以在不同的数据库之间进行<code>迁移</code>。</p>
+<p>空间可以回收(DROPTABLE操作可自动回收表空间;其他情况，表空间不能自己回收)。如果对于统计分析或是日志表，删除大量数据后可以通过: <code>alter table TableName engine=innodb</code>;回收不用的空间。对于使用独立表空间的表，不管怎么删除，表空间的碎片不会太严重的影响性能，而且还有机会处理。</p>
+<p><strong>独立表空间结构</strong></p>
+<p>独立表空间由段、区、页组成。前面已经讲解过了。</p>
+<p><strong>真实表空间对应的文件大小</strong><br>我们到数据目录里看，会发现一个新建的表对应的<code>.ibd</code>文件只占用了<code>96K</code>，才6个页面大小(MySQL5.7中)，这是因为一开始表空间占用的空间很小，因为表里边都没有数据。不过别忘了这些.ibd文件是<code>自扩展的</code>，随着表中数据的增多，表空间对应的文件也逐渐增大。</p>
+<p>查看InnoDB的表空间类型:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看是否独立表空间</span><br>mysql&gt; show variables like <span class="hljs-string">&#x27;innodb_file_per_table&#x27;</span>;<br>+-----------------------+-------+<br>| Variable_name         | Value |<br>+-----------------------+-------+<br>| innodb_file_per_table | ON    |<br>+-----------------------+-------+<br>1 row <span class="hljs-keyword">in</span> <span class="hljs-built_in">set</span>, 1 warning (0.00 sec)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>MySQL8.0中 7个页面大小。原因.idb 还存了 表结构。。。表结构.frm取消了</p>
+<h3 id="5-2系统表空间"><a href="#5-2系统表空间" class="headerlink" title="5.2系统表空间"></a>5.2系统表空间</h3><p>系统表空间的结构和独立表空间基本类似，只不过由于整个MySQL进程只有一个系统表空间，在系统表空间中会额外记录一些有关整个系统信息的页面，这部分是独立表空间中没有的。</p>
+<p><strong>lnnoDB数据字典</strong></p>
+<p>每当我们向一个表中插入一条记录的时候，<code>MySQL校验过程</code>如下:</p>
+<p>先要校验一下插入语句对应的表存不存在，插入的列和表中的列是否符合，如果语法没有问题的话，还需要知道该表的聚簇索引和所有二级索引对应的根页面是哪个表空间的哪个页面，然后把记录插入对应索引的B+树中。所以说，MySQL除了保存着我们插入的用户数据之外，还需要保存许多额外的信息，比方说:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs txt">-某个表属于哪个表空间，表里边有多少列<br>-表对应的每一个列的类型是什么<br>-该表有多少索引，每个索引对应哪几个字段，该索引对应的根页面在哪个表空间的哪个页面<br>-该表有哪些外键，外键对应哪个表的哪些列<br>-某个表空间对应文件系统上文件路径是什么<br>- ...<br></code></pre></td></tr></table></figure>
+
+
+
+<p>上述这些数据并不是我们使用<code>INSERT</code>语句插入的用户数据，实际上是为了更好的管理我们这些用户数据而不得已引入的一些额外数据，这些数据也称为<code>元数据</code>。InnoDB存储引擎特意定义了一些列的<code>内部系统表</code>(internalsystem table)来记录这些这些元数据:</p>
+<table>
+<thead>
+<tr>
+<th>表名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SYS_TABLES</code></td>
+<td>整个InnoDB存储引擎中所有的表的信息</td>
+</tr>
+<tr>
+<td><code>SYS_COLUMNS</code></td>
+<td>整个InnoDB存储引擎中所有的列的信息</td>
+</tr>
+<tr>
+<td><code>SYS_INDEXES</code></td>
+<td>整个InnoDB存储引擎中所有的索引的信息</td>
+</tr>
+<tr>
+<td><code>SYS_FIELDS</code></td>
+<td>整个InnoDB存储引擎中所有的索引对应的列的信息</td>
+</tr>
+<tr>
+<td>SYS_FOREIGN</td>
+<td>整个InnoDB存储引擎中所有的外键的信息</td>
+</tr>
+<tr>
+<td>SYS_FOREIGN_COLS</td>
+<td>整个InnoDB存储引擎中所有的外键对应列的信息</td>
+</tr>
+<tr>
+<td>SYS_TABLESPACES</td>
+<td>整个InnoDB存储引擎中所有的表空间信息</td>
+</tr>
+<tr>
+<td>SYS_DATAFILES</td>
+<td>整个InnoDB存储引擎中所有的表空间对应文件系统的文件路</td>
+</tr>
+<tr>
+<td>SYS_VIRTUAL</td>
+<td>整个InnoDB存储引擎中所有的虚拟生成列的信息</td>
+</tr>
+</tbody></table>
+<p>这些系统表也被称为<code>数据字典</code>，它们都是以<code>B+</code>树的形式保存在系统表空间的某些页面中，其中<code>SYS_TABLES</code>.<br><code>SYS_COLUNNS</code>、<code>SYS_INDEXES</code>、<code>SYS_FIELDS</code>这四个表尤其重要，称之为基本系统表(basic system tables) </p>
+<p>注意:用户是<code>不能直接访问</code>InnoDB的这些内部系统表，除非你直接去解析系统表空间对应文件系统上的文件。不过考虑到查看这些表的内容可能有助于大家分析问题，所以在系统数据库<code>information_schema</code>中提供了一些以innodb_sys开头的表:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt; USE information_schema ;<br>Database changed<br>mysql&gt; SHOW TABLES LIKE <span class="hljs-string">&#x27;innodb_sys%&#x27;</span>;<br>+--------------------------------------------+<br>| Tables_in_information_schema (innodb_sys%) |<br>+--------------------------------------------+<br>| INNODB_SYS_DATAFILES                       |<br>| INNODB_SYS_VIRTUAL                         |<br>| INNODB_SYS_INDEXES                         |<br>| INNODB_SYS_TABLES                          |<br>| INNODB_SYS_FIELDS                          |<br>| INNODB_SYS_TABLESPACES                     |<br>| INNODB_SYS_FOREIGN_COLS                    |<br>| INNODB_SYS_COLUMNS                         |<br>| INNODB_SYS_FOREIGN                         |<br>| INNODB_SYS_TABLESTATS                      |<br>+--------------------------------------------+<br>10 rows <span class="hljs-keyword">in</span> <span class="hljs-built_in">set</span> (0.00 sec)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>在<code>information_schema</code>数据库中的这些以<code>INNODB_SYS</code>开头的表并不是真正的内部系统表(内部系统表就是我们上边以SYS开头的那些表)，而是在存储引擎启动时读取这些以<code>SYS</code>开头的系统表，然后填充到这些以<br><code>INNODB_SYS</code>开头的表中。以<code>INNODB_SYS</code>开头的表和以<code>SYS</code>开头的表中的字段并不完全一样，但供大家参考已经足矣。</p>
+<h2 id="附录-数据页加载的三种方式"><a href="#附录-数据页加载的三种方式" class="headerlink" title="附录:数据页加载的三种方式"></a>附录:数据页加载的三种方式</h2><p>InnoDB从磁盘中读取数据的<code>最小单位</code>是数据页。而你想得到的id &#x3D; xoxx的数据，就是这个数据页众多行中的一行。</p>
+<p>对于MySQL存放的数据，逻辑概念上我们称之为表，在磁盘等物理层面而言是<code>按数据页</code>形式进行存放的，当其加载到MysQL中我们称之为<code>缓存页</code>。</p>
+<p>如果缓冲池中没有该页数据，那么缓冲池有以下三种读取数据的方式,每种方式的读取效率都是不同的:</p>
+<h3 id="1-内存读取"><a href="#1-内存读取" class="headerlink" title="1.内存读取"></a>1.内存读取</h3><p>如果该数据存在于内存中，基本上执行时间在1ms左右，效率还是很高的。</p>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220325104247259.png" srcset="/img/loading.gif" lazyload alt="image-20220325104247259"></p>
+<h3 id="2-随机读取"><a href="#2-随机读取" class="headerlink" title="2.随机读取"></a>2.随机读取</h3><p>如果数据没有在内存中，就需要在磁盘上对该页进行查找，整体时间预估在<code>10ms</code>左右，这10ms 中有6ms是磁盘的实际繁忙时间(包括了<code>寻道和半圈旋转时间</code>），有3ms是对可能发生的排队时间的估计值，另外还有1ms的传输时间，将页从磁盘服务器缓冲区传输到数据库缓冲区中。这10ms 看起来很快，但实际上对于数据库来说消耗的时间已经非常长了，因为这还只是一个页的读取时间。</p>
+<p><img src="/medias/12%E3%80%81MySQL_InnoDB%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.assets/image-20220325104508228.png" srcset="/img/loading.gif" lazyload alt="image-20220325104508228"></p>
+<h3 id="3-顺序读取"><a href="#3-顺序读取" class="headerlink" title="3.顺序读取"></a>3.顺序读取</h3><p>顺序读取其实是一种批量读取的方式，因为我们请求的<code>数据在磁盘上往往都是相邻存储的</code>，顺序读取可以帮我们批量读取页面，这样的话，一次性加载到缓冲池中就不需要再对其他页面单独进行磁盘I&#x2F;O操作了。如果一个磁盘的吞吐量是40MB&#x2F;S，那么对于一个16KB大小的页来说，一次可以顺序读取2560 (40MB&#x2F;16KB)个页，相当于一个页的读取时间为0.4ms。采用批量读取的方式，即使是从磁盘上进行读取，效率也比从内存中只单独读取一个页的效率要高。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MySQL 索引的数据结构</div>
+      <div>https://iexlee.github.io/12、InnoDB数据存储结构.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>李翔的博客</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/13%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E5%88%9B%E5%BB%BA%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99.html" title="MySQL 索引的数据结构">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL 索引的数据结构</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/11%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E5%8F%8A%E8%B0%83%E4%BC%98%E7%AF%87.html" title="MySQL 索引的数据结构">
+                        <span class="hidden-mobile">MySQL 索引的数据结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

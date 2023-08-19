@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="李翔的博客">
+  <meta name="keywords" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+  
+    <meta name="description" content="# git 教程    5. Git 工作流程5.1 Git 初始化我们先初始化一个本地仓 121) 新建测试文件夹2) 进入文件夹,然后右键创建版本库   此时 我们看到  121) 文件夹上多了一个绿色图标(如果没有请看本章节 5.3小节说明)2) 文件夹内部生成了一个.git 隐藏文件夹(需要设置隐藏文件夹可见)  5.2  git 流程5.2.1 流程图 5.2.2概念即详解1234">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git (2)">
+<meta property="og:url" content="https://iexlee.github.io/42%E3%80%81Git%E6%95%99%E7%A8%8B.html">
+<meta property="og:site_name" content="xLee&#39;s blog">
+<meta property="og:description" content="# git 教程    5. Git 工作流程5.1 Git 初始化我们先初始化一个本地仓 121) 新建测试文件夹2) 进入文件夹,然后右键创建版本库   此时 我们看到  121) 文件夹上多了一个绿色图标(如果没有请看本章节 5.3小节说明)2) 文件夹内部生成了一个.git 隐藏文件夹(需要设置隐藏文件夹可见)  5.2  git 流程5.2.1 流程图 5.2.2概念即详解1234">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://iexlee.github.io/medias/img_Git_assets/cover.png">
+<meta property="article:published_time" content="2022-08-25T01:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-19T15:53:01.904Z">
+<meta property="article:author" content="李翔的博客">
+<meta property="article:tag" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iexlee.github.io/medias/img_Git_assets/cover.png">
+  
+  
+  
+  <title>Git (2) - xLee&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iexlee.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="xLee's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>xLee&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Git (2)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-25 09:00" pubdate>
+          2022年8月25日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Git (2)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <img src="/medias/img_Git_assets/gitlogo.png" srcset="/img/loading.gif" lazyload/>
+
+<hr/>
+# git 教程
+
+
+
+<h1 id="5-Git-工作流程"><a href="#5-Git-工作流程" class="headerlink" title="5. Git 工作流程"></a>5. Git 工作流程</h1><h2 id="5-1-Git-初始化"><a href="#5-1-Git-初始化" class="headerlink" title="5.1 Git 初始化"></a>5.1 Git 初始化</h2><p>我们先初始化一个本地仓</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">1) 新建测试文件夹<br>2) 进入文件夹,然后右键创建版本库<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1571993852280.png" srcset="/img/loading.gif" lazyload alt="1571993852280"></p>
+<p>此时 我们看到 </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">1</span>) 文件夹上多了一个绿色图标(如果没有请看本章节 <span class="hljs-number">5</span>.<span class="hljs-number">3</span>小节说明)<br><span class="hljs-attribute">2</span>) 文件夹内部生成了一个.git 隐藏文件夹(需要设置隐藏文件夹可见)<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-2-git-流程"><a href="#5-2-git-流程" class="headerlink" title="5.2  git 流程"></a>5.2  git 流程</h2><h3 id="5-2-1-流程图"><a href="#5-2-1-流程图" class="headerlink" title="5.2.1 流程图"></a>5.2.1 流程图</h3><p><img src="/medias/img_Git_assets/git%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5-2-2概念即详解"><a href="#5-2-2概念即详解" class="headerlink" title="5.2.2概念即详解"></a>5.2.2概念即详解</h3><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">本地仓库：是在开发人员自己电脑上的Git仓库,存放我们的代码(.git 隐藏文件夹就是我们的本地仓库)		<br>远程仓库：是在远程服务器上的Git仓库,存放代码(可以是github.com或者gitee.com 上的仓库,或者自己该公司的服务器)<br>工作区: 我们自己写代码(文档)的地方<br><span class="hljs-section">暂存区: 在 本地仓库中的一个特殊的文件(index) 叫做暂存区,临时存储我们即将要提交的文件</span><br><span class="hljs-section">------------</span><br>Clone：克隆，就是将远程仓库复制到本地仓库<br>Push：推送，就是将本地仓库代码上传到远程仓库<br>Pull：拉取，就是将远程仓库代码下载到本地仓库,并将代码 克隆到本地工作区<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/git%E6%B5%81%E7%A8%8B_%E8%AF%A6%E8%A7%A3.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="6-Git-的基本使用01-TortoiseGit-操作本地仓库"><a href="#6-Git-的基本使用01-TortoiseGit-操作本地仓库" class="headerlink" title="6.Git 的基本使用01-TortoiseGit 操作本地仓库"></a>6.Git 的基本使用01-TortoiseGit 操作本地仓库</h1><h2 id="6-1-初始化仓库"><a href="#6-1-初始化仓库" class="headerlink" title="6.1  初始化仓库"></a>6.1  初始化仓库</h2><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">方法一: <br>新建一个文件夹,进入文件夹内部操作<br><span class="hljs-number">1</span>)右键<span class="hljs-comment">--&gt; 在这里创建Git 版本库 </span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572161580344.png" srcset="/img/loading.gif" lazyload alt="1572161580344"></p>
+<p>  注意: 不要直接在桌面上操作,否则桌面就是一个仓库</p>
+ <figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ada">方法二:<br><span class="hljs-number">2</span>) 右键<span class="hljs-comment">--&gt;Git GUI here</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572162906623.png" srcset="/img/loading.gif" lazyload alt="1572162906623"></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp">方法三: 命令行模式<br><span class="hljs-number">2</span>) git <span class="hljs-keyword">init</span> <br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572163015102.png" srcset="/img/loading.gif" lazyload alt="1572163015102"></p>
+<p>创建完毕仓库,我们发现,此时我们创建的文件夹下有一个.git 文件已经生成了</p>
+<p>并且仓库文件夹上多了一个 绿色图标</p>
+<p><img src="/medias/img_Git_assets/1572164583708.png" srcset="/img/loading.gif" lazyload alt="1572164583708"></p>
+<h2 id="6-2-添加文件"><a href="#6-2-添加文件" class="headerlink" title="6.2 添加文件"></a>6.2 添加文件</h2><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs clean"><span class="hljs-number">1</span>)在仓库中新建一个文件<br><span class="hljs-number">2</span>)选中新建的文件--&gt;右键--&gt; TortoiseGit--&gt; 添加<br><span class="hljs-number">3</span>)此时我们看到文件夹上多了一个 <span class="hljs-string">&quot;加号&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572164475555.png" srcset="/img/loading.gif" lazyload alt="1572164475555"></p>
+<p><img src="/medias/img_Git_assets/1572165109016.png" srcset="/img/loading.gif" lazyload alt="1572165109016"></p>
+<h2 id="6-3-提交文件至本地仓库"><a href="#6-3-提交文件至本地仓库" class="headerlink" title="6.3 提交文件至本地仓库"></a>6.3 提交文件至本地仓库</h2><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-number">1</span>)选中文件<br><span class="hljs-number">2</span>) 右键<span class="hljs-comment">--git提交</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572165471421.png" srcset="/img/loading.gif" lazyload alt="1572165471421"></p>
+<h2 id="6-4-修改文件-与再次提交文件"><a href="#6-4-修改文件-与再次提交文件" class="headerlink" title="6.4 修改文件,与再次提交文件"></a>6.4 修改文件,与再次提交文件</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">当我们修改文件以后,文件上多了一个红色感叹号,表示我们上次提交后该文件被修改过<br>提交后文件图标又变成绿色<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572165676716.png" srcset="/img/loading.gif" lazyload alt="1572165676716"></p>
+<h2 id="6-5-文件状态讲解"><a href="#6-5-文件状态讲解" class="headerlink" title="6.5 文件状态讲解"></a>6.5 文件状态讲解</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Git</span>工作目录下的文件存在两种状态：<br><span class="hljs-attribute">1</span> untracked 未跟踪（未被纳入版本控制） :  比如新建的文件(此时文件夹上没有图标或者有一个<span class="hljs-string">&quot;问号&quot;</span>)<br><span class="hljs-attribute">2</span> tracked 已跟踪（被纳入版本控制）     <br>    <span class="hljs-attribute">2</span>.<span class="hljs-number">1</span> Staged 已暂存状态            : 添加 但未提交状态(此时文件夹上有一个<span class="hljs-string">&quot;加号&quot;</span>)<br>	<span class="hljs-attribute">2</span>.<span class="hljs-number">2</span> Unmodified 未修改状态        : 已提交(此时文件夹上有一个<span class="hljs-string">&quot;对号&quot;</span>)<br>	<span class="hljs-attribute">2</span>.<span class="hljs-number">3</span> Modified 已修改状态          : 修改了,但是还没有提交 (此时文件夹上有一个<span class="hljs-string">&quot;红色感叹号&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1569293793902.png" srcset="/img/loading.gif" lazyload></p>
+<p>这些文件的状态会随着我们执行Git的命令发生变化</p>
+<p><img src="/medias/img_Git_assets/1566627767390.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="6-6-修改文件-不提交和上一个版本比较差异-diff"><a href="#6-6-修改文件-不提交和上一个版本比较差异-diff" class="headerlink" title="6.6 修改文件,不提交和上一个版本比较差异(diff)"></a>6.6 修改文件,不提交和上一个版本比较差异(diff)</h2><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">修改文件</span><span class="hljs-string">,</span><span class="hljs-comment">此时不要提交</span><br><span class="hljs-comment">选中文件</span><span class="hljs-literal">--</span>&gt;<span class="hljs-comment">右键</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">TortoiseGit</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">比较差异</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572167540734.png" srcset="/img/loading.gif" lazyload alt="1572167540734"></p>
+<h2 id="6-7-查看提交历史记录"><a href="#6-7-查看提交历史记录" class="headerlink" title="6.7 查看提交历史记录"></a>6.7 查看提交历史记录</h2><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">选中文件</span><br><span class="hljs-comment">右键</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">TortoiseGit</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">显示日志</span><br><span class="hljs-comment">此时我们可以看到所有的历史提交记录</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572167842481.png" srcset="/img/loading.gif" lazyload alt="1572167842481"></p>
+<p>##6.8 回退至历史版本</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">右键</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">TortoiseGit</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">显示日志</span><br><span class="hljs-comment">选中某个版本</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">进行如下操作</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572171034508.png" srcset="/img/loading.gif" lazyload alt="1572171034508"></p>
+<h2 id="6-9-文件删除"><a href="#6-9-文件删除" class="headerlink" title="6.9 文件删除"></a>6.9 文件删除</h2><p>###6.9.1本地删除与恢复</p>
+  <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">1) 直接选中文件删除的话</span><span class="hljs-string">,</span><span class="hljs-comment">其实只是删除了本地工作区的文件</span><span class="hljs-string">,</span><span class="hljs-comment">并没有删除 仓库中的文件</span><br>   <span class="hljs-comment">此时时可以回退的</span><span class="hljs-string">,</span> <span class="hljs-comment">比如我们进行如下操作</span><br>   <span class="hljs-comment">1)文件删除</span><br>   <span class="hljs-comment">2)右键</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">TortoiseGit</span><span class="hljs-literal">--</span>&gt; <span class="hljs-comment">还原</span><br>   <span class="hljs-comment">此时我们发现文件又被恢复了</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572169387835.png" srcset="/img/loading.gif" lazyload alt="1572169387835"></p>
+<h3 id="6-9-2从版本库删除"><a href="#6-9-2从版本库删除" class="headerlink" title="6.9.2从版本库删除"></a>6.9.2从版本库删除</h3><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gcode"><span class="hljs-number">2</span>) 我们如果真的想要将某个文件从服务器删除,需要进行如下操作<br>   <span class="hljs-number">1</span>) 删除文件,和上面的操作一样<br>   <span class="hljs-number">2</span>) 提交,此时服务文件已经删除了<span class="hljs-comment">(历史版本还在,还是可以恢复)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="6-9-3从版本库删除-但是不删除本地"><a href="#6-9-3从版本库删除-但是不删除本地" class="headerlink" title="6.9.3从版本库删除,但是不删除本地"></a>6.9.3从版本库删除,但是不删除本地</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs makefile">我们可以如下操作,只删除服务器上的文件,但是本地文件并不删除<br><span class="hljs-section">备注: 删除之后需要提交,才会真正的从服务器删除</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="/medias/img_Git_assets/1572171572963.png" srcset="/img/loading.gif" lazyload alt="1572171572963"></p>
+<h2 id="6-10-忽略提交"><a href="#6-10-忽略提交" class="headerlink" title="6.10 忽略提交"></a>6.10 忽略提交</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">有时候我们一些文件是不需要提交的比如说idea/eclipse 开发的代码自动生成的配置文件<br>如何配置不提交呢<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572172137494.png" srcset="/img/loading.gif" lazyload alt="1572172137494"></p>
+<p>此时我们的根目录下会生成一个.gitignore 文件</p>
+<p>忽略文件如何阅读,常见格式</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 所有以.a 结尾的文件讲被忽略(递归)</span><br><span class="hljs-string">*.a</span><br><span class="hljs-comment"># 不管其他规则怎样,强制不忽略  lib.a</span><br><span class="hljs-type">!lib.a</span><br><span class="hljs-comment"># 只忽略 文件 TODO (注意这里是文件)</span><br><span class="hljs-string">/TODO</span><br><span class="hljs-comment"># 忽略 build文件夹下所有内容(递归) 这里是文件夹</span><br><span class="hljs-string">build/</span><br><span class="hljs-comment"># 忽略 doc 目录下以 *.txt 结尾的文件 (不递归)</span><br><span class="hljs-string">doc/*.txt</span><br><span class="hljs-comment"># 忽略 doc 目录下以 *.pdf 结尾的文件 (递归)</span><br><span class="hljs-string">doc/**/*.pdf</span><br></code></pre></td></tr></table></figure>
+
+<p>当然理解了上述规则,我们也可以手动编辑该文件,而不用通过窗口化操作(如果不嫌麻烦)</p>
+<h1 id="7-Git-的基本使用02-TortoiseGit-操作本地仓库-分支"><a href="#7-Git-的基本使用02-TortoiseGit-操作本地仓库-分支" class="headerlink" title="7. Git 的基本使用02-TortoiseGit 操作本地仓库(分支)"></a>7. Git 的基本使用02-TortoiseGit 操作本地仓库(分支)</h1><h2 id="7-1-分支的概念"><a href="#7-1-分支的概念" class="headerlink" title="7.1 分支的概念"></a>7.1 分支的概念</h2><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs erlang">几乎所有的版本控制系统都以某种形式支持分支。 使用分支意味着你可以把你的工作从开发主线上分离开来，避免影响开发主线。多线程开发,可以同时开启多个任务的开发,多个任务之间互不影响.<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-2-为何要使用分支"><a href="#7-2-为何要使用分支" class="headerlink" title="7.2 为何要使用分支"></a>7.2 为何要使用分支</h2><p>先看单线程开发</p>
+<p><img src="/medias/img_Git_assets/1572173978185.png" srcset="/img/loading.gif" lazyload alt="1572173978185"></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gcode">思考如下现象<br>    <span class="hljs-number">10.1</span> 日 业务部门提出需求 : 明年 元旦<span class="hljs-number">3</span>天做<span class="hljs-number">2</span>个促销活动<br>	<span class="hljs-number">1</span>) <span class="hljs-number">12.31</span> 号上线活动<span class="hljs-number">1</span>, <br>	<span class="hljs-number">2</span>) <span class="hljs-number">1.4</span> 号上线活动<span class="hljs-number">2</span> ,同时 要求撤销 活动<span class="hljs-number">1</span><br>    你所在 部门领导 为了保证能顺利完成,要求 <span class="hljs-number">11.15</span> 号完成 上述连个功能的开发工作<br>此时作为开发人员:我要面临两个文件, 活动<span class="hljs-number">1</span> 的代码,即要存在<span class="hljs-comment">(12.31 要用)</span>又要不存在<span class="hljs-comment">(1.4 号要求删除)</span> ,我们怎么做?<br>显然比较棘手,如果使用分支<span class="hljs-comment">(可以理解为将代码复制一份)</span>将很好解决<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572174740013.png" srcset="/img/loading.gif" lazyload alt="1572174740013"></p>
+<h2 id="7-3-创建分支"><a href="#7-3-创建分支" class="headerlink" title="7.3 创建分支"></a>7.3 创建分支</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">到现在为止,我们一直使用的时主分支(<span class="hljs-literal">master</span>)<br>在主分支上操作创建分支<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572178189980.png" srcset="/img/loading.gif" lazyload alt="1572178189980"></p>
+<h2 id="7-4-分支的查看切换"><a href="#7-4-分支的查看切换" class="headerlink" title="7.4 分支的查看切换"></a>7.4 分支的查看切换</h2><h3 id="7-4-1查看分支"><a href="#7-4-1查看分支" class="headerlink" title="7.4.1查看分支"></a>7.4.1查看分支</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs">查看版本分支图,此时我们看到有两个分支<br>当然,我们可以创建多个分支<br>可以看到多个分支的图形<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572179420706.png" srcset="/img/loading.gif" lazyload alt="1572179420706"></p>
+<h3 id="7-4-2切换分支"><a href="#7-4-2切换分支" class="headerlink" title="7.4.2切换分支"></a>7.4.2切换分支</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">右键<span class="hljs-comment">--&gt; 检出</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="/medias/img_Git_assets/1572180057481.png" srcset="/img/loading.gif" lazyload alt="1572180057481"></p>
+<p>##7.5 分支的合并与删除</p>
+<h3 id="7-5-1合并"><a href="#7-5-1合并" class="headerlink" title="7.5.1合并"></a>7.5.1合并</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ada">我们将代码切换到分支<span class="hljs-number">1</span>,然后写属于需求<span class="hljs-number">1</span> 的代码并提交<br>当我们把需求<span class="hljs-number">1</span> 开发完毕如何把需求<span class="hljs-number">1</span> 的代码合并到主分支呢?<br><span class="hljs-comment">--&gt;1 切换到 主版本</span><br><span class="hljs-comment">--&gt;2 右键 合并即可将需求1 写的代码合并至主分支</span><br><span class="hljs-comment">-----此时我们看到代码自动合并到了master分支</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572180623156.png" srcset="/img/loading.gif" lazyload alt="1572180623156"></p>
+<h3 id="7-5-2删除分支"><a href="#7-5-2删除分支" class="headerlink" title="7.5.2删除分支"></a>7.5.2删除分支</h3><p><img src="/medias/img_Git_assets/1572183670465.png" srcset="/img/loading.gif" lazyload alt="1572183670465"></p>
+<p>5,冲突的处理<br>​	5.1)冲突的概念</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs vim">现象演示	<br>	开发人员A 开发需求<span class="hljs-number">1</span>,开发了一个工具类 MathUtil,里面第一行写了一个方法 <span class="hljs-built_in">add</span>(<span class="hljs-keyword">int</span> [] <span class="hljs-keyword">args</span>)<br> 同时开发人员B 开发需求<span class="hljs-number">2</span>,开发了一个工具类 MathUtil,里面第一行写了一个方法 <span class="hljs-built_in">add</span>(<span class="hljs-keyword">int</span> <span class="hljs-keyword">a</span> <span class="hljs-keyword">int</span> <span class="hljs-keyword">b</span>)<br>他们在互相不知道对方需求的情况下同时提交了代码到自己的分支<br>   思考此时如果我们把需求<span class="hljs-number">1</span> 和需求<span class="hljs-number">2</span> 同时都合并到主分支上, 主分支的 工具类 MathUtil 的第一行应该使用谁的代码? <br>   此时主分支是不能智能判断第一行使用谁的代码,合并时会报错,我们叫做冲突.<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572181403239.png" srcset="/img/loading.gif" lazyload alt="1572181403239"></p>
+<p>​	5.2) 如何处理冲突</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">分析一下冲突的原因:<br><span class="hljs-code">	开发人员之间彼此没有沟通导致的同一个时间节点修改了同一个地方的代码,合并是冲突</span><br>思考:<br><span class="hljs-code">	我们能直接把某个开发人员开发的代码删除吗?</span><br>显然不能<br><span class="hljs-section">	所以在处理冲突时,第一步应该时找开发另一个需求的人员沟通,之后才是处理冲突</span><br><span class="hljs-section">-----</span><br>--&gt; 选中冲突的文件(带黄色感叹号的文件都是冲突的文件,如果有多个需要逐一处理)<br>--&gt; 右键--&gt; 编辑冲突,<br>--&gt;处理完毕后.标记已解决<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572182565594.png" srcset="/img/loading.gif" lazyload alt="1572182565594"></p>
+<p><img src="/medias/img_Git_assets/1572182727568.png" srcset="/img/loading.gif" lazyload alt="1572182727568"></p>
+<h1 id="8-tag-标签"><a href="#8-tag-标签" class="headerlink" title="8.tag  标签"></a>8.tag  标签</h1><h2 id="8-1-标签的概念"><a href="#8-1-标签的概念" class="headerlink" title="8.1 标签的概念"></a>8.1 标签的概念</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">如果你的项目达到一个重要的阶段，并希望永远记住那个特别的提交快照，你可以给它打上标签(<span class="hljs-keyword">tag</span>)<br>比如说，我们想为我们的项目发布一个<span class="hljs-string">&quot;1.0&quot;</span>版本。 我们给最新一次提交打上（HEAD）<span class="hljs-string">&quot;v1.0&quot;</span>的标签。<br>标签可以理解为项目里程碑的一个标记,一旦打上了这个标记则,表示当前的代码将不允许提交<br></code></pre></td></tr></table></figure>
+
+<h2 id="8-2-标签的创建-tag"><a href="#8-2-标签的创建-tag" class="headerlink" title="8.2  标签的创建(tag)"></a>8.2  标签的创建(tag)</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">标签的创建和分支的创建操作几乎一样<br></code></pre></td></tr></table></figure>
+
+<p><img src="/medias/img_Git_assets/1572183849972.png" srcset="/img/loading.gif" lazyload alt="1572183849972"></p>
+<h2 id="8-3-标签的切换与删除"><a href="#8-3-标签的切换与删除" class="headerlink" title="8.3 标签的切换与删除"></a>8.3 标签的切换与删除</h2><p><img src="/medias/img_Git_assets/1572184030612.png" srcset="/img/loading.gif" lazyload alt="1572184030612"></p>
+<p><img src="/medias/img_Git_assets/1572184109746.png" srcset="/img/loading.gif" lazyload alt="1572184109746"></p>
+<pre><code class="hljs">
+
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+`
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/git/" class="category-chain-item">git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Git (2)</div>
+      <div>https://iexlee.github.io/42、Git教程.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>李翔的博客</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/43%E3%80%81Git%E6%95%99%E7%A8%8B.html" title="Git (3)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Git (3)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/41%E3%80%81Git%E6%95%99%E7%A8%8B.html" title="Git  (1)">
+                        <span class="hidden-mobile">Git  (1)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

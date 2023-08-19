@@ -1,0 +1,896 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="李翔的博客">
+  <meta name="keywords" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+  
+    <meta name="description" content="1. 异常1.1 异常概念异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：  异常 ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。  在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。  异常指的并不是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO(异常&amp;File&amp;综合案例）">
+<meta property="og:url" content="https://iexlee.github.io/27%E3%80%81IO-%E5%BC%82%E5%B8%B8-File-%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89.html">
+<meta property="og:site_name" content="xLee&#39;s blog">
+<meta property="og:description" content="1. 异常1.1 异常概念异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：  异常 ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。  在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。  异常指的并不是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://iexlee.github.io/medias/27%E3%80%81img_IO(%E5%BC%82%E5%B8%B8&File&%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89/cover.png">
+<meta property="article:published_time" content="2022-06-09T01:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-19T15:53:01.904Z">
+<meta property="article:author" content="李翔的博客">
+<meta property="article:tag" content="静态网站,hexo教程,搭建学术简历,免费建站,GitHub博客,免备案网站">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iexlee.github.io/medias/27%E3%80%81img_IO(%E5%BC%82%E5%B8%B8&File&%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89/cover.png">
+  
+  
+  
+  <title>IO(异常&amp;File&amp;综合案例） - xLee&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iexlee.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="xLee's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>xLee&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="IO(异常&amp;File&amp;综合案例）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-09 09:00" pubdate>
+          2022年6月9日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          143 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">IO(异常&amp;File&amp;综合案例）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-异常"><a href="#1-异常" class="headerlink" title="1. 异常"></a>1. 异常</h1><h2 id="1-1-异常概念"><a href="#1-1-异常概念" class="headerlink" title="1.1 异常概念"></a>1.1 异常概念</h2><p>异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：</p>
+<ul>
+<li><strong>异常</strong> ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。</li>
+</ul>
+<p>在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。</p>
+<blockquote>
+<p>异常指的并不是语法错误,语法错了,编译不通过,不会产生字节码文件,根本不能运行.</p>
+</blockquote>
+<h2 id="1-2-异常体系"><a href="#1-2-异常体系" class="headerlink" title="1.2 异常体系"></a>1.2 异常体系</h2><p>异常机制其实是帮助我们<strong>找到</strong>程序中的问题，异常的根类是<code>java.lang.Throwable</code>，其下有两个子类：<code>java.lang.Error</code>与<code>java.lang.Exception</code>，平常所说的异常指<code>java.lang.Exception</code>。</p>
+<p><img src="/medias/27%E3%80%81img_IO(%E5%BC%82%E5%B8%B8&File&%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>Throwable体系：</strong></p>
+<ul>
+<li><strong>Error</strong>:严重错误Error，无法通过处理的错误，只能事先避免，好比绝症。</li>
+<li><strong>Exception</strong>:表示异常，异常产生后程序员可以通过代码的方式纠正，使程序继续运行，是必须要处理的。好比感冒、阑尾炎。</li>
+</ul>
+<p><strong>Throwable中的常用方法：</strong></p>
+<ul>
+<li><p><code>public void printStackTrace()</code>:打印异常的详细信息。</p>
+<p><em>包含了异常的类型,异常的原因,还包括异常出现的位置,在开发和调试阶段,都得使用printStackTrace。</em></p>
+</li>
+<li><p><code>public String getMessage()</code>:获取发生异常的原因。</p>
+<p><em>提示给用户的时候,就提示错误原因。</em></p>
+</li>
+<li><p><code>public String toString()</code>:获取异常的类型和异常描述信息(不用)。</p>
+</li>
+</ul>
+<p><em><strong>出现异常,不要紧张,把异常的简单类名,拷贝到API中去查。</strong></em></p>
+<p><img src="/medias/27%E3%80%81img_IO(%E5%BC%82%E5%B8%B8&File&%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89/%E7%AE%80%E5%8D%95%E7%9A%84%E5%BC%82%E5%B8%B8%E6%9F%A5%E7%9C%8B.bmp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-3-异常分类"><a href="#1-3-异常分类" class="headerlink" title="1.3 异常分类"></a>1.3 异常分类</h2><p>我们平常说的异常就是指Exception，因为这类异常一旦出现，我们就要对代码进行更正，修复程序。</p>
+<p><strong>异常(Exception)的分类</strong>:根据在编译时期还是运行时期去检查异常?</p>
+<ul>
+<li><strong>编译时期异常</strong>:checked异常。在编译时期,就会检查,如果没有处理异常,则编译失败。(如日期格式化异常)</li>
+<li><strong>运行时期异常</strong>:runtime异常。在运行时期,检查异常.在编译时期,运行异常不会编译器检测(不报错)。(如数学异常)</li>
+</ul>
+<p>​    <img src="/medias/27%E3%80%81img_IO(%E5%BC%82%E5%B8%B8&File&%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89/%E5%BC%82%E5%B8%B8%E7%9A%84%E5%88%86%E7%B1%BB.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-4-异常的产生过程解析"><a href="#1-4-异常的产生过程解析" class="headerlink" title="1.4 异常的产生过程解析"></a>1.4 异常的产生过程解析</h2><p>先运行下面的程序，程序会产生一个数组索引越界异常ArrayIndexOfBoundsException。我们通过图解来解析下异常产生的过程。</p>
+<p> 工具类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ArrayTools</span> &#123;<br>    <span class="hljs-comment">// 对给定的数组通过给定的角标获取元素。</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getElement</span><span class="hljs-params">(<span class="hljs-type">int</span>[] arr, <span class="hljs-type">int</span> index)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">element</span> <span class="hljs-operator">=</span> arr[index];<br>        <span class="hljs-keyword">return</span> element;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExceptionDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">int</span>[] arr = &#123; <span class="hljs-number">34</span>, <span class="hljs-number">12</span>, <span class="hljs-number">67</span> &#125;;<br>        intnum = ArrayTools.getElement(arr, <span class="hljs-number">4</span>)<br>        System.out.println(<span class="hljs-string">&quot;num=&quot;</span> + num);<br>        System.out.println(<span class="hljs-string">&quot;over&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上述程序执行过程图解：</p>
+<p> <img src="/medias/27%E3%80%81img_IO(%E5%BC%82%E5%B8%B8&File&%E7%BB%BC%E5%90%88%E6%A1%88%E4%BE%8B%EF%BC%89/%E5%BC%82%E5%B8%B8%E4%BA%A7%E7%94%9F%E8%BF%87%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-5-抛出异常throw"><a href="#1-5-抛出异常throw" class="headerlink" title="1.5 抛出异常throw"></a>1.5 抛出异常throw</h2><p>在编写程序时，我们必须要考虑程序出现问题的情况。比如，在定义方法时，方法需要接受参数。那么，当调用方法使用接受到的参数时，首先需要先对参数数据进行合法的判断，数据若不合法，就应该告诉调用者，传递合法的数据进来。这时需要使用抛出异常的方式来告诉调用者。</p>
+<p>在java中，提供了一个<strong>throw</strong>关键字，它用来抛出一个指定的异常对象。那么，抛出一个异常具体如何操作呢？</p>
+<ol>
+<li><p>创建一个异常对象。封装一些提示信息(信息可以自己编写)。</p>
+</li>
+<li><p>需要将这个异常对象告知给调用者。怎么告知呢？怎么将这个异常对象传递到调用者处呢？通过关键字throw就可以完成。throw 异常对象。</p>
+<p>throw<strong>用在方法内</strong>，用来抛出一个异常对象，将这个异常对象传递到调用者处，并结束当前方法的执行。</p>
+</li>
+</ol>
+<p><strong>使用格式：</strong></p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type"></span>异常类名(参数);<br></code></pre></td></tr></table></figure>
+
+<p> 例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NullPointerException</span>(<span class="hljs-string">&quot;要访问的arr数组不存在&quot;</span>);<br><br><span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayIndexOutOfBoundsException</span>(<span class="hljs-string">&quot;该索引在数组中不存在，已超出范围&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>学习完抛出异常的格式后，我们通过下面程序演示下throw的使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThrowDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">//创建一个数组 </span><br>        <span class="hljs-type">int</span>[] arr = &#123;<span class="hljs-number">2</span>,<span class="hljs-number">4</span>,<span class="hljs-number">52</span>,<span class="hljs-number">2</span>&#125;;<br>        <span class="hljs-comment">//根据索引找对应的元素 </span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> <span class="hljs-number">4</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">element</span> <span class="hljs-operator">=</span> getElement(arr, index);<br><br>        System.out.println(element);<br>        System.out.println(<span class="hljs-string">&quot;over&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * 根据 索引找到数组中对应的元素</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getElement</span><span class="hljs-params">(<span class="hljs-type">int</span>[] arr,<span class="hljs-type">int</span> index)</span>&#123; <br>       	<span class="hljs-comment">//判断  索引是否越界</span><br>        <span class="hljs-keyword">if</span>(index&lt;<span class="hljs-number">0</span> || index&gt;arr.length-<span class="hljs-number">1</span>)&#123;<br>             <span class="hljs-comment">/*</span><br><span class="hljs-comment">             判断条件如果满足，当执行完throw抛出异常对象后，方法已经无法继续运算。</span><br><span class="hljs-comment">             这时就会结束当前方法的执行，并将异常告知给调用者。这时就需要通过异常来解决。 </span><br><span class="hljs-comment">              */</span><br>             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayIndexOutOfBoundsException</span>(<span class="hljs-string">&quot;哥们，角标越界了```&quot;</span>);<br>        &#125;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">element</span> <span class="hljs-operator">=</span> arr[index];<br>        <span class="hljs-keyword">return</span> element;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：如果产生了问题，我们就会throw将问题描述类即异常进行抛出，也就是将问题返回给该方法的调用者。</p>
+<p>那么对于调用者来说，该怎么处理呢？一种是进行捕获处理，另一种就是继续讲问题声明出去，使用throws声明处理。</p>
+</blockquote>
+<h2 id="1-6-声明异常throws"><a href="#1-6-声明异常throws" class="headerlink" title="1.6 声明异常throws"></a>1.6 声明异常throws</h2><p><strong>声明异常</strong>：将问题标识出来，报告给调用者。如果方法内通过throw抛出了编译时异常，而没有捕获处理（稍后讲解该方式），那么必须通过throws进行声明，让调用者去处理。</p>
+<p>关键字<strong>throws</strong>运用于方法声明之上,用于表示当前方法不处理异常,而是提醒该方法的调用者来处理异常(抛出异常).</p>
+<p><strong>声明异常格式：</strong></p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs aspectj">修饰符 返回值类型 方法名(参数) <span class="hljs-keyword">throws</span> 异常类名<span class="hljs-number">1</span>,异常类名<span class="hljs-number">2</span>…&#123;   &#125;	<br></code></pre></td></tr></table></figure>
+
+<p>声明异常的代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThrowsDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> FileNotFoundException &#123;<br>        read(<span class="hljs-string">&quot;a.txt&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 如果定义功能时有问题发生需要报告给调用者。可以通过在方法上使用throws关键字进行声明</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">read</span><span class="hljs-params">(String path)</span> <span class="hljs-keyword">throws</span> FileNotFoundException &#123;<br>        <span class="hljs-keyword">if</span> (!path.equals(<span class="hljs-string">&quot;a.txt&quot;</span>)) &#123;<span class="hljs-comment">//如果不是 a.txt这个文件 </span><br>            <span class="hljs-comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileNotFoundException</span>(<span class="hljs-string">&quot;文件不存在&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>throws用于进行异常类的声明，若该方法可能有多种异常情况产生，那么在throws后面可以写多个异常类，用逗号隔开。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThrowsDemo2</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        read(<span class="hljs-string">&quot;a.txt&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">read</span><span class="hljs-params">(String path)</span><span class="hljs-keyword">throws</span> FileNotFoundException, IOException &#123;<br>        <span class="hljs-keyword">if</span> (!path.equals(<span class="hljs-string">&quot;a.txt&quot;</span>)) &#123;<span class="hljs-comment">//如果不是 a.txt这个文件 </span><br>            <span class="hljs-comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileNotFoundException</span>(<span class="hljs-string">&quot;文件不存在&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (!path.equals(<span class="hljs-string">&quot;b.txt&quot;</span>)) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IOException</span>();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-7-捕获异常try…catch"><a href="#1-7-捕获异常try…catch" class="headerlink" title="1.7 捕获异常try…catch"></a>1.7 捕获异常try…catch</h2><p>如果异常出现的话,会立刻终止程序,所以我们得处理异常:</p>
+<ol>
+<li>该方法不处理,而是声明抛出,由该方法的调用者来处理(throws)。</li>
+<li>在方法中使用try-catch的语句块来处理异常。</li>
+</ol>
+<p><strong>try-catch</strong>的方式就是捕获异常。</p>
+<ul>
+<li><strong>捕获异常</strong>：Java中对异常有针对性的语句进行捕获，可以对出现的异常进行指定方式的处理。</li>
+</ul>
+<p>捕获异常语法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span>&#123;<br>     编写可能会出现异常的代码<br>&#125;<span class="hljs-keyword">catch</span>(异常类型  e)&#123;<br>     处理异常的代码<br>     <span class="hljs-comment">//记录日志/打印异常信息/继续抛出异常</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>try：</strong>该代码块中编写可能产生异常的代码。</p>
+<p><strong>catch：</strong>用来进行某种异常的捕获，实现对捕获到的异常进行处理。</p>
+<blockquote>
+<p>注意:try和catch都不能单独使用,必须连用。</p>
+</blockquote>
+<p>演示如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TryCatchDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<span class="hljs-comment">// 当产生异常时，必须有处理方式。要么捕获，要么声明。</span><br>            read(<span class="hljs-string">&quot;b.txt&quot;</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (FileNotFoundException e) &#123;<span class="hljs-comment">// 括号中需要定义什么呢？</span><br>          	<span class="hljs-comment">//try中抛出的是什么异常，在括号中就定义什么异常类型</span><br>            System.out.println(e);<br>        &#125;<br>        System.out.println(<span class="hljs-string">&quot;over&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 我们 当前的这个方法中 有异常  有编译期异常</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">read</span><span class="hljs-params">(String path)</span> <span class="hljs-keyword">throws</span> FileNotFoundException &#123;<br>        <span class="hljs-keyword">if</span> (!path.equals(<span class="hljs-string">&quot;a.txt&quot;</span>)) &#123;<span class="hljs-comment">//如果不是 a.txt这个文件 </span><br>            <span class="hljs-comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileNotFoundException</span>(<span class="hljs-string">&quot;文件不存在&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如何获取异常信息：</p>
+<p>Throwable类中定义了一些查看方法:</p>
+<ul>
+<li><p><code>public String getMessage()</code>:获取异常的描述信息,原因(提示给用户的时候,就提示错误原因。</p>
+</li>
+<li><p><code>public String toString()</code>:获取异常的类型和异常描述信息(不用)。</p>
+</li>
+<li><p><code>public void printStackTrace()</code>:打印异常的跟踪栈信息并输出到控制台。</p>
+</li>
+</ul>
+<p>​            <em>包含了异常的类型,异常的原因,还包括异常出现的位置,在开发和调试阶段,都得使用printStackTrace。</em></p>
+<p>在开发中呢也可以在catch将编译期异常转换成运行期异常处理。</p>
+<p>多个异常使用捕获又该如何处理呢？</p>
+<ol>
+<li>多个异常分别处理。</li>
+<li>多个异常一次捕获，多次处理。</li>
+<li>多个异常一次捕获一次处理。</li>
+</ol>
+<p>一般我们是使用一次捕获多次处理方式，格式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span>&#123;<br>     编写可能会出现异常的代码<br>&#125;<span class="hljs-keyword">catch</span>(异常类型A  e)&#123;  当<span class="hljs-keyword">try</span>中出现A类型异常,就用该<span class="hljs-keyword">catch</span>来捕获.<br>     处理异常的代码<br>     <span class="hljs-comment">//记录日志/打印异常信息/继续抛出异常</span><br>&#125;<span class="hljs-keyword">catch</span>(异常类型B  e)&#123;  当<span class="hljs-keyword">try</span>中出现B类型异常,就用该<span class="hljs-keyword">catch</span>来捕获.<br>     处理异常的代码<br>     <span class="hljs-comment">//记录日志/打印异常信息/继续抛出异常</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意:这种异常处理方式，要求多个catch中的异常不能相同，并且若catch中的多个异常之间有子父类异常的关系，那么子类异常要求在上面的catch处理，父类异常在下面的catch处理。</p>
+</blockquote>
+<h2 id="1-8-finally-代码块"><a href="#1-8-finally-代码块" class="headerlink" title="1.8 finally 代码块"></a>1.8 finally 代码块</h2><p><strong>finally</strong>：有一些特定的代码无论异常是否发生，都需要执行。另外，因为异常会引发程序跳转，导致有些语句执行不到。而finally就是解决这个问题的，在finally代码块中存放的代码都是一定会被执行的。</p>
+<p>什么时候的代码必须最终执行？</p>
+<p>当我们在try语句块中打开了一些物理资源(磁盘文件&#x2F;网络连接&#x2F;数据库连接等),我们都得在使用完之后,最终关闭打开的资源。</p>
+<p>finally的语法:</p>
+<p> try…catch….finally:自身需要处理异常,最终还得关闭资源。</p>
+<blockquote>
+<p>注意:finally不能单独使用。</p>
+</blockquote>
+<p>比如在我们之后学习的IO流中，当打开了一个关联文件的资源，最后程序不管结果如何，都需要把这个资源关闭掉。</p>
+<p>finally代码参考如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TryCatchDemo4</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            read(<span class="hljs-string">&quot;a.txt&quot;</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (FileNotFoundException e) &#123;<br>            <span class="hljs-comment">//抓取到的是编译期异常  抛出去的是运行期 </span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            System.out.println(<span class="hljs-string">&quot;不管程序怎样，这里都将会被执行。&quot;</span>);<br>        &#125;<br>        System.out.println(<span class="hljs-string">&quot;over&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 我们 当前的这个方法中 有异常  有编译期异常</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">read</span><span class="hljs-params">(String path)</span> <span class="hljs-keyword">throws</span> FileNotFoundException &#123;<br>        <span class="hljs-keyword">if</span> (!path.equals(<span class="hljs-string">&quot;a.txt&quot;</span>)) &#123;<span class="hljs-comment">//如果不是 a.txt这个文件 </span><br>            <span class="hljs-comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileNotFoundException</span>(<span class="hljs-string">&quot;文件不存在&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当只有在try或者catch中调用退出JVM的相关方法,此时finally才不会执行,否则finally永远会执行。</p>
+</blockquote>
+<h2 id="1-9-异常注意事项"><a href="#1-9-异常注意事项" class="headerlink" title="1.9 异常注意事项"></a>1.9 异常注意事项</h2><ul>
+<li>运行时异常被抛出可以不处理。即不捕获也不声明抛出。</li>
+<li>如果父类抛出了多个异常,子类覆盖父类方法时,只能抛出相同的异常或者是他的子集。</li>
+<li>父类方法没有抛出异常，子类覆盖父类该方法时也不可抛出异常。此时子类产生该异常，只能捕获处理，不能声明抛出</li>
+<li>当多异常处理时，捕获处理，前边的类不能是后边类的父类</li>
+<li>在try&#x2F;catch后可以追加finally代码块，其中的代码一定会被执行，通常用于资源回收。</li>
+</ul>
+<h2 id="1-10-概述"><a href="#1-10-概述" class="headerlink" title="1.10 概述"></a>1.10 概述</h2><p><strong>为什么需要自定义异常类:</strong></p>
+<p>我们说了Java中不同的异常类,分别表示着某一种具体的异常情况,那么在开发中总是有些异常情况是SUN没有定义好的,此时我们根据自己业务的异常情况来定义异常类。,例如年龄负数问题,考试成绩负数问题。</p>
+<p>在上述代码中，发现这些异常都是JDK内部定义好的，但是实际开发中也会出现很多异常,这些异常很可能在JDK中没有定义过,例如年龄负数问题,考试成绩负数问题.那么能不能自己定义异常呢？</p>
+<p><strong>什么是自定义异常类:</strong></p>
+<p>在开发中根据自己业务的异常情况来定义异常类.</p>
+<p>自定义一个业务逻辑异常: <strong>LoginException</strong>。一个登陆异常类。</p>
+<p><strong>异常类如何定义:</strong></p>
+<ol>
+<li>自定义一个编译期异常: 自定义类 并继承于<code>java.lang.Exception</code>。</li>
+<li>自定义一个运行时期的异常类:自定义类 并继承于<code>java.lang.RuntimeException</code>。</li>
+</ol>
+<h2 id="1-11-自定义异常的练习"><a href="#1-11-自定义异常的练习" class="headerlink" title="1.11 自定义异常的练习"></a>1.11 自定义异常的练习</h2><p>要求：我们模拟登陆操作，如果用户名已存在，则抛出异常并提示：亲，该用户名已经被注册。</p>
+<p>首先定义一个登陆异常类LoginException：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 业务逻辑异常</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LoginException</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Exception</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 空参构造</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">LoginException</span><span class="hljs-params">()</span> &#123;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> message 表示异常提示</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">LoginException</span><span class="hljs-params">(String message)</span> &#123;<br>        <span class="hljs-built_in">super</span>(message);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>模拟登陆操作，使用数组模拟数据库中存储的数据，并提供当前注册账号是否存在方法用于判断。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;<br>    <span class="hljs-comment">// 模拟数据库中已存在账号</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String[] names = &#123;<span class="hljs-string">&quot;bill&quot;</span>,<span class="hljs-string">&quot;hill&quot;</span>,<span class="hljs-string">&quot;jill&quot;</span>&#125;;<br>   <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;     <br>        <span class="hljs-comment">//调用方法</span><br>        <span class="hljs-keyword">try</span>&#123;<br>            <span class="hljs-comment">// 可能出现异常的代码</span><br>            checkUsername(<span class="hljs-string">&quot;nill&quot;</span>);<br>            System.out.println(<span class="hljs-string">&quot;注册成功&quot;</span>);<span class="hljs-comment">//如果没有异常就是注册成功</span><br>        &#125; <span class="hljs-keyword">catch</span>(LoginException e) &#123;<br>            <span class="hljs-comment">//处理异常</span><br>            e.printStackTrace();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">//判断当前注册账号是否存在</span><br>    <span class="hljs-comment">//因为是编译期异常，又想调用者去处理 所以声明该异常</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">checkUsername</span><span class="hljs-params">(String uname)</span> <span class="hljs-keyword">throws</span> LoginException &#123;<br>        <span class="hljs-keyword">for</span> (String name : names) &#123;<br>            <span class="hljs-keyword">if</span>(name.equals(uname))&#123;<span class="hljs-comment">//如果名字在这里面 就抛出登陆异常</span><br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LoginException</span>(<span class="hljs-string">&quot;亲&quot;</span>+name+<span class="hljs-string">&quot;已经被注册了！&quot;</span>);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="2-File类"><a href="#2-File类" class="headerlink" title="2. File类"></a>2. File类</h1><h2 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h2><p><code>java.io.File</code> 类是文件和目录路径名的抽象表示，主要用于文件和目录的创建、查找和删除等操作。</p>
+<h2 id="2-2-构造方法"><a href="#2-2-构造方法" class="headerlink" title="2.2 构造方法"></a>2.2 构造方法</h2><ul>
+<li><code>public File(String pathname) </code> ：通过将给定的<strong>路径名字符串</strong>转换为抽象路径名来创建新的 File实例。  </li>
+<li><code>public File(String parent, String child) </code> ：从<strong>父路径名字符串和子路径名字符串</strong>创建新的 File实例。</li>
+<li><code>public File(File parent, String child)</code> ：从<strong>父抽象路径名和子路径名字符串</strong>创建新的 File实例。  </li>
+<li>构造举例，代码如下：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 文件路径名</span><br><span class="hljs-type">String</span> <span class="hljs-variable">pathname</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;D:\\aaa.txt&quot;</span>;<br><span class="hljs-type">File</span> <span class="hljs-variable">file1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(pathname); <br><br><span class="hljs-comment">// 文件路径名</span><br><span class="hljs-type">String</span> <span class="hljs-variable">pathname2</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;D:\\aaa\\bbb.txt&quot;</span>;<br><span class="hljs-type">File</span> <span class="hljs-variable">file2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(pathname2); <br><br><span class="hljs-comment">// 通过父路径和子路径字符串</span><br> <span class="hljs-type">String</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;d:\\aaa&quot;</span>;<br> <span class="hljs-type">String</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;bbb.txt&quot;</span>;<br> <span class="hljs-type">File</span> <span class="hljs-variable">file3</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(parent, child);<br><br><span class="hljs-comment">// 通过父级File对象和子路径字符串</span><br><span class="hljs-type">File</span> <span class="hljs-variable">parentDir</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;d:\\aaa&quot;</span>);<br><span class="hljs-type">String</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;bbb.txt&quot;</span>;<br><span class="hljs-type">File</span> <span class="hljs-variable">file4</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(parentDir, child);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>小贴士：</p>
+<ol>
+<li>一个File对象代表硬盘中实际存在的一个文件或者目录。</li>
+<li>无论该路径下是否存在文件或者目录，都不影响File对象的创建。</li>
+</ol>
+</blockquote>
+<h2 id="2-3-常用方法"><a href="#2-3-常用方法" class="headerlink" title="2.3 常用方法"></a>2.3 常用方法</h2><h3 id="获取功能的方法"><a href="#获取功能的方法" class="headerlink" title="获取功能的方法"></a>获取功能的方法</h3><ul>
+<li><p><code>public String getAbsolutePath() </code> ：返回此File的绝对路径名字符串。</p>
+</li>
+<li><p><code>public String getPath()</code> ：将此File转换为路径名字符串。 </p>
+</li>
+<li><p><code>public String getName()</code>  ：返回由此File表示的文件或目录的名称。  </p>
+</li>
+<li><p><code>public long length()</code>  ：返回由此File表示的文件的长度。 </p>
+<p>方法演示，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FileGet</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;d:/aaa/bbb.java&quot;</span>);     <br>        System.out.println(<span class="hljs-string">&quot;文件绝对路径:&quot;</span>+f.getAbsolutePath());<br>        System.out.println(<span class="hljs-string">&quot;文件构造路径:&quot;</span>+f.getPath());<br>        System.out.println(<span class="hljs-string">&quot;文件名称:&quot;</span>+f.getName());<br>        System.out.println(<span class="hljs-string">&quot;文件长度:&quot;</span>+f.length()+<span class="hljs-string">&quot;字节&quot;</span>);<br><br>        <span class="hljs-type">File</span> <span class="hljs-variable">f2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;d:/aaa&quot;</span>);     <br>        System.out.println(<span class="hljs-string">&quot;目录绝对路径:&quot;</span>+f2.getAbsolutePath());<br>        System.out.println(<span class="hljs-string">&quot;目录构造路径:&quot;</span>+f2.getPath());<br>        System.out.println(<span class="hljs-string">&quot;目录名称:&quot;</span>+f2.getName());<br>        System.out.println(<span class="hljs-string">&quot;目录长度:&quot;</span>+f2.length());<br>    &#125;<br>&#125;<br>输出结果：<br>文件绝对路径:d:\aaa\bbb.java<br>文件构造路径:d:\aaa\bbb.java<br>文件名称:bbb.java<br>文件长度:<span class="hljs-number">636</span>字节<br><br>目录绝对路径:d:\aaa<br>目录构造路径:d:\aaa<br>目录名称:aaa<br>目录长度:<span class="hljs-number">4096</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>API中说明：length()，表示文件的长度。但是File对象表示目录，则返回值未指定。</p>
+</blockquote>
+<h3 id="绝对路径和相对路径"><a href="#绝对路径和相对路径" class="headerlink" title="绝对路径和相对路径"></a>绝对路径和相对路径</h3><ul>
+<li><strong>绝对路径</strong>：从盘符开始的路径，这是一个完整的路径。</li>
+<li><strong>相对路径</strong>：相对于项目目录的路径，这是一个便捷的路径，开发中经常使用。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FilePath</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>      	<span class="hljs-comment">// D盘下的bbb.java文件</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;D:\\bbb.java&quot;</span>);<br>        System.out.println(f.getAbsolutePath());<br>      	<br>		<span class="hljs-comment">// 项目下的bbb.java文件</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">f2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;bbb.java&quot;</span>);<br>        System.out.println(f2.getAbsolutePath());<br>    &#125;<br>&#125;<br>输出结果：<br>D:\bbb.java<br>D:\idea_project_test4\bbb.java<br></code></pre></td></tr></table></figure>
+
+<h3 id="判断功能的方法"><a href="#判断功能的方法" class="headerlink" title="判断功能的方法"></a>判断功能的方法</h3><ul>
+<li><code>public boolean exists()</code> ：此File表示的文件或目录是否实际存在。</li>
+<li><code>public boolean isDirectory()</code> ：此File表示的是否为目录。</li>
+<li><code>public boolean isFile()</code> ：此File表示的是否为文件。</li>
+</ul>
+<p>方法演示，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FileIs</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;d:\\aaa\\bbb.java&quot;</span>);<br>        <span class="hljs-type">File</span> <span class="hljs-variable">f2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;d:\\aaa&quot;</span>);<br>      	<span class="hljs-comment">// 判断是否存在</span><br>        System.out.println(<span class="hljs-string">&quot;d:\\aaa\\bbb.java 是否存在:&quot;</span>+f.exists());<br>        System.out.println(<span class="hljs-string">&quot;d:\\aaa 是否存在:&quot;</span>+f2.exists());<br>      	<span class="hljs-comment">// 判断是文件还是目录</span><br>        System.out.println(<span class="hljs-string">&quot;d:\\aaa 文件?:&quot;</span>+f2.isFile());<br>        System.out.println(<span class="hljs-string">&quot;d:\\aaa 目录?:&quot;</span>+f2.isDirectory());<br>    &#125;<br>&#125;<br>输出结果：<br>d:\aaa\bbb.java 是否存在:<span class="hljs-literal">true</span><br>d:\aaa 是否存在:<span class="hljs-literal">true</span><br>d:\aaa 文件?:<span class="hljs-literal">false</span><br>d:\aaa 目录?:<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="创建删除功能的方法"><a href="#创建删除功能的方法" class="headerlink" title="创建删除功能的方法"></a>创建删除功能的方法</h3><ul>
+<li><code>public boolean createNewFile()</code> ：当且仅当具有该名称的文件尚不存在时，创建一个新的空文件。 </li>
+<li><code>public boolean delete()</code> ：删除由此File表示的文件或目录。  </li>
+<li><code>public boolean mkdir()</code> ：创建由此File表示的目录。</li>
+<li><code>public boolean mkdirs()</code> ：创建由此File表示的目录，包括任何必需但不存在的父目录。</li>
+</ul>
+<p>方法演示，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FileCreateDelete</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-comment">// 文件的创建</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;aaa.txt&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;是否存在:&quot;</span>+f.exists()); <span class="hljs-comment">// false</span><br>        System.out.println(<span class="hljs-string">&quot;是否创建:&quot;</span>+f.createNewFile()); <span class="hljs-comment">// true</span><br>        System.out.println(<span class="hljs-string">&quot;是否存在:&quot;</span>+f.exists()); <span class="hljs-comment">// true</span><br>		<br>     	<span class="hljs-comment">// 目录的创建</span><br>      	File f2= <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;newDir&quot;</span>);	<br>        System.out.println(<span class="hljs-string">&quot;是否存在:&quot;</span>+f2.exists());<span class="hljs-comment">// false</span><br>        System.out.println(<span class="hljs-string">&quot;是否创建:&quot;</span>+f2.mkdir());	<span class="hljs-comment">// true</span><br>        System.out.println(<span class="hljs-string">&quot;是否存在:&quot;</span>+f2.exists());<span class="hljs-comment">// true</span><br><br>		<span class="hljs-comment">// 创建多级目录</span><br>      	File f3= <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;newDira\\newDirb&quot;</span>);<br>        System.out.println(f3.mkdir());<span class="hljs-comment">// false</span><br>        File f4= <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;newDira\\newDirb&quot;</span>);<br>        System.out.println(f4.mkdirs());<span class="hljs-comment">// true</span><br>      <br>      	<span class="hljs-comment">// 文件的删除</span><br>       	System.out.println(f.delete());<span class="hljs-comment">// true</span><br>      <br>      	<span class="hljs-comment">// 目录的删除</span><br>        System.out.println(f2.delete());<span class="hljs-comment">// true</span><br>        System.out.println(f4.delete());<span class="hljs-comment">// false</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>API中说明：delete方法，如果此File表示目录，则目录必须为空才能删除。</p>
+</blockquote>
+<h2 id="2-4-目录的遍历"><a href="#2-4-目录的遍历" class="headerlink" title="2.4 目录的遍历"></a>2.4 目录的遍历</h2><ul>
+<li><code>public String[] list()</code> ：返回一个String数组，表示该File目录中的所有子文件或目录。</li>
+<li><code>public File[] listFiles()</code> ：返回一个File数组，表示该File目录中的所有的子文件或目录。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FileFor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">dir</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;d:\\java_code&quot;</span>);<br>      <br>      	<span class="hljs-comment">//获取当前目录下的文件以及文件夹的名称。</span><br>		String[] names = dir.list();<br>		<span class="hljs-keyword">for</span>(String name : names)&#123;<br>			System.out.println(name);<br>		&#125;<br>        <span class="hljs-comment">//获取当前目录下的文件以及文件夹对象，只要拿到了文件对象，那么就可以获取更多信息</span><br>        File[] files = dir.listFiles();<br>        <span class="hljs-keyword">for</span> (File file : files) &#123;<br>            System.out.println(file);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>小贴士：</p>
+<p>调用listFiles方法的File对象，表示的必须是实际存在的目录，否则返回null，无法进行遍历。</p>
+</blockquote>
+<h2 id="2-5-综合练习"><a href="#2-5-综合练习" class="headerlink" title="2.5 综合练习"></a>2.5 综合练习</h2><h4 id="练习1：创建文件夹"><a href="#练习1：创建文件夹" class="headerlink" title="练习1：创建文件夹"></a>练习1：创建文件夹</h4><p>​	在当前模块下的aaa文件夹中创建一个a.txt文件</p>
+<p>代码实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test1</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-comment">//需求：在当前模块下的aaa文件夹中创建一个a.txt文件</span><br><br>        <span class="hljs-comment">//1.创建a.txt的父级路径</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;myfile\\aaa&quot;</span>);<br>        <span class="hljs-comment">//2.创建父级路径</span><br>        <span class="hljs-comment">//如果aaa是存在的，那么此时创建失败的。</span><br>        <span class="hljs-comment">//如果aaa是不存在的，那么此时创建成功的。</span><br>        file.mkdirs();<br>        <span class="hljs-comment">//3.拼接父级路径和子级路径</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">src</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(file,<span class="hljs-string">&quot;a.txt&quot;</span>);<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> src.createNewFile();<br>        <span class="hljs-keyword">if</span>(b)&#123;<br>            System.out.println(<span class="hljs-string">&quot;创建成功&quot;</span>);<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;创建失败&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="练习2：查找文件（不考虑子文件夹）"><a href="#练习2：查找文件（不考虑子文件夹）" class="headerlink" title="练习2：查找文件（不考虑子文件夹）"></a>练习2：查找文件（不考虑子文件夹）</h4><p>​	定义一个方法找某一个文件夹中，是否有以avi结尾的电影（暂时不需要考虑子文件夹）</p>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test2</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">/*需求：</span><br><span class="hljs-comment">             定义一个方法找某一个文件夹中，是否有以avi结尾的电影。</span><br><span class="hljs-comment">	        （暂时不需要考虑子文件夹）</span><br><span class="hljs-comment">        */</span><br><br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;D:\\aaa\\bbb&quot;</span>);<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> haveAVI(file);<br>        System.out.println(b);<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    * 作用：用来找某一个文件夹中，是否有以avi结尾的电影</span><br><span class="hljs-comment">    * 形参：要查找的文件夹</span><br><span class="hljs-comment">    * 返回值：查找的结果  存在true  不存在false</span><br><span class="hljs-comment">    * */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">haveAVI</span><span class="hljs-params">(File file)</span>&#123;<span class="hljs-comment">// D:\\aaa</span><br>        <span class="hljs-comment">//1.进入aaa文件夹，而且要获取里面所有的内容</span><br>        File[] files = file.listFiles();<br>        <span class="hljs-comment">//2.遍历数组获取里面的每一个元素</span><br>        <span class="hljs-keyword">for</span> (File f : files) &#123;<br>            <span class="hljs-comment">//f：依次表示aaa文件夹里面每一个文件或者文件夹的路径</span><br>            <span class="hljs-keyword">if</span>(f.isFile() &amp;&amp; f.getName().endsWith(<span class="hljs-string">&quot;.avi&quot;</span>))&#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">//3.如果循环结束之后还没有找到，直接返回false</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="练习3：（考虑子文件夹）"><a href="#练习3：（考虑子文件夹）" class="headerlink" title="练习3：（考虑子文件夹）"></a>练习3：（考虑子文件夹）</h3><p>​	找到电脑中所有以avi结尾的电影。（需要考虑子文件夹）</p>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test3</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">/* 需求：</span><br><span class="hljs-comment">        找到电脑中所有以avi结尾的电影。（需要考虑子文件夹）</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"></span><br><span class="hljs-comment">        套路：</span><br><span class="hljs-comment">            1，进入文件夹</span><br><span class="hljs-comment">            2，遍历数组</span><br><span class="hljs-comment">            3，判断</span><br><span class="hljs-comment">            4，判断</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">        */</span><br><br>        findAVI();<br><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findAVI</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-comment">//获取本地所有的盘符</span><br>        File[] arr = File.listRoots();<br>        <span class="hljs-keyword">for</span> (File f : arr) &#123;<br>            findAVI(f);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findAVI</span><span class="hljs-params">(File src)</span>&#123;<span class="hljs-comment">//&quot;C:\\</span><br>        <span class="hljs-comment">//1.进入文件夹src</span><br>        File[] files = src.listFiles();<br>        <span class="hljs-comment">//2.遍历数组,依次得到src里面每一个文件或者文件夹</span><br>        <span class="hljs-keyword">if</span>(files != <span class="hljs-literal">null</span>)&#123;<br>            <span class="hljs-keyword">for</span> (File file : files) &#123;<br>                <span class="hljs-keyword">if</span>(file.isFile())&#123;<br>                    <span class="hljs-comment">//3，判断，如果是文件，就可以执行题目的业务逻辑</span><br>                    <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> file.getName();<br>                    <span class="hljs-keyword">if</span>(name.endsWith(<span class="hljs-string">&quot;.avi&quot;</span>))&#123;<br>                        System.out.println(file);<br>                    &#125;<br>                &#125;<span class="hljs-keyword">else</span>&#123;<br>                    <span class="hljs-comment">//4，判断，如果是文件夹，就可以递归</span><br>                    <span class="hljs-comment">//细节：再次调用本方法的时候，参数一定要是src的次一级路径</span><br>                    findAVI(file);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="练习4：删除多级文件夹"><a href="#练习4：删除多级文件夹" class="headerlink" title="练习4：删除多级文件夹"></a>练习4：删除多级文件夹</h3><p>需求： 如果我们要删除一个有内容的文件夹<br>       1.先删除文件夹里面所有的内容<br>           2.再删除自己</p>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test4</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">           删除一个多级文件夹</span><br><span class="hljs-comment">           如果我们要删除一个有内容的文件夹</span><br><span class="hljs-comment">           1.先删除文件夹里面所有的内容</span><br><span class="hljs-comment">           2.再删除自己</span><br><span class="hljs-comment">        */</span><br><br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;D:\\aaa\\src&quot;</span>);<br>        delete(file);<br><br>    &#125;<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    * 作用：删除src文件夹</span><br><span class="hljs-comment">    * 参数：要删除的文件夹</span><br><span class="hljs-comment">    * */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">delete</span><span class="hljs-params">(File src)</span>&#123;<br>        <span class="hljs-comment">//1.先删除文件夹里面所有的内容</span><br>        <span class="hljs-comment">//进入src</span><br>        File[] files = src.listFiles();<br>        <span class="hljs-comment">//遍历</span><br>        <span class="hljs-keyword">for</span> (File file : files) &#123;<br>            <span class="hljs-comment">//判断,如果是文件，删除</span><br>            <span class="hljs-keyword">if</span>(file.isFile())&#123;<br>                file.delete();<br>            &#125;<span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">//判断,如果是文件夹，就递归</span><br>                delete(file);<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">//2.再删除自己</span><br>        src.delete();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="练习5：统计大小"><a href="#练习5：统计大小" class="headerlink" title="练习5：统计大小"></a>练习5：统计大小</h3><p>​	需求：统计一个文件夹的总大小</p>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test5</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>       <span class="hljs-comment">/*需求：</span><br><span class="hljs-comment">            统计一个文件夹的总大小</span><br><span class="hljs-comment">      */</span><br><br><br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;D:\\aaa\\src&quot;</span>);<br><br>        <span class="hljs-type">long</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> getLen(file);<br>        System.out.println(len);<span class="hljs-comment">//4919189</span><br>    &#125;<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    * 作用：</span><br><span class="hljs-comment">    *       统计一个文件夹的总大小</span><br><span class="hljs-comment">    * 参数：</span><br><span class="hljs-comment">    *       表示要统计的那个文件夹</span><br><span class="hljs-comment">    * 返回值：</span><br><span class="hljs-comment">    *       统计之后的结果</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * 文件夹的总大小：</span><br><span class="hljs-comment">    *       说白了，文件夹里面所有文件的大小</span><br><span class="hljs-comment">    * */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">long</span> <span class="hljs-title function_">getLen</span><span class="hljs-params">(File src)</span>&#123;<br>        <span class="hljs-comment">//1.定义变量进行累加</span><br>        <span class="hljs-type">long</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">//2.进入src文件夹</span><br>        File[] files = src.listFiles();<br>        <span class="hljs-comment">//3.遍历数组</span><br>        <span class="hljs-keyword">for</span> (File file : files) &#123;<br>            <span class="hljs-comment">//4.判断</span><br>            <span class="hljs-keyword">if</span>(file.isFile())&#123;<br>                <span class="hljs-comment">//我们就把当前文件的大小累加到len当中</span><br>                len = len + file.length();<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-comment">//判断，如果是文件夹就递归</span><br>                len = len + getLen(file);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> len;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="练习6：统计文件个数"><a href="#练习6：统计文件个数" class="headerlink" title="练习6：统计文件个数"></a>练习6：统计文件个数</h3><p>  需求：统计一个文件夹中每种文件的个数并打印。（考虑子文件夹）<br>            打印格式如下：<br>            txt:3个<br>            doc:4个<br>            jpg:6个</p>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test6</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">            需求：统计一个文件夹中每种文件的个数并打印。（考虑子文件夹）</span><br><span class="hljs-comment">            打印格式如下：</span><br><span class="hljs-comment">            txt:3个</span><br><span class="hljs-comment">            doc:4个</span><br><span class="hljs-comment">            jpg:6个</span><br><span class="hljs-comment">        */</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;D:\\aaa\\src&quot;</span>);<br>        HashMap&lt;String, Integer&gt; hm = getCount(file);<br>        System.out.println(hm);<br>    &#125;<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    * 作用：</span><br><span class="hljs-comment">    *       统计一个文件夹中每种文件的个数</span><br><span class="hljs-comment">    * 参数：</span><br><span class="hljs-comment">    *       要统计的那个文件夹</span><br><span class="hljs-comment">    * 返回值：</span><br><span class="hljs-comment">    *       用来统计map集合</span><br><span class="hljs-comment">    *       键：后缀名 值：次数</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    *       a.txt</span><br><span class="hljs-comment">    *       a.a.txt</span><br><span class="hljs-comment">    *       aaa（不需要统计的）</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> HashMap&lt;String,Integer&gt; <span class="hljs-title function_">getCount</span><span class="hljs-params">(File src)</span>&#123;<br>        <span class="hljs-comment">//1.定义集合用来统计</span><br>        HashMap&lt;String,Integer&gt; hm = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-comment">//2.进入src文件夹</span><br>        File[] files = src.listFiles();<br>        <span class="hljs-comment">//3.遍历数组</span><br>        <span class="hljs-keyword">for</span> (File file : files) &#123;<br>            <span class="hljs-comment">//4.判断，如果是文件，统计</span><br>            <span class="hljs-keyword">if</span>(file.isFile())&#123;<br>                <span class="hljs-comment">//a.txt</span><br>                <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> file.getName();<br>                String[] arr = name.split(<span class="hljs-string">&quot;\\.&quot;</span>);<br>                <span class="hljs-keyword">if</span>(arr.length &gt;= <span class="hljs-number">2</span>)&#123;<br>                    <span class="hljs-type">String</span> <span class="hljs-variable">endName</span> <span class="hljs-operator">=</span> arr[arr.length - <span class="hljs-number">1</span>];<br>                    <span class="hljs-keyword">if</span>(hm.containsKey(endName))&#123;<br>                        <span class="hljs-comment">//存在</span><br>                        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> hm.get(endName);<br>                        count++;<br>                        hm.put(endName,count);<br>                    &#125;<span class="hljs-keyword">else</span>&#123;<br>                        <span class="hljs-comment">//不存在</span><br>                        hm.put(endName,<span class="hljs-number">1</span>);<br>                    &#125;<br>                &#125;<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-comment">//5.判断，如果是文件夹，递归</span><br>                <span class="hljs-comment">//sonMap里面是子文件中每一种文件的个数</span><br>                HashMap&lt;String, Integer&gt; sonMap = getCount(file);<br>                <span class="hljs-comment">//hm:  txt=1  jpg=2  doc=3</span><br>                <span class="hljs-comment">//sonMap: txt=3 jpg=1</span><br>                <span class="hljs-comment">//遍历sonMap把里面的值累加到hm当中</span><br>                Set&lt;Map.Entry&lt;String, Integer&gt;&gt; entries = sonMap.entrySet();<br>                <span class="hljs-keyword">for</span> (Map.Entry&lt;String, Integer&gt; entry : entries) &#123;<br>                    <span class="hljs-type">String</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> entry.getKey();<br>                    <span class="hljs-type">int</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> entry.getValue();<br>                    <span class="hljs-keyword">if</span>(hm.containsKey(key))&#123;<br>                        <span class="hljs-comment">//存在</span><br>                        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> hm.get(key);<br>                        count = count + value;<br>                        hm.put(key,count);<br>                    &#125;<span class="hljs-keyword">else</span>&#123;<br>                        <span class="hljs-comment">//不存在</span><br>                        hm.put(key,value);<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> hm;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>IO(异常&amp;File&amp;综合案例）</div>
+      <div>https://iexlee.github.io/27、IO-异常-File-综合案例）.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>李翔的博客</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/31%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B01.html" title="多线程01">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">多线程01</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/26%E3%80%81stream%E6%B5%81%E5%92%8C%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8.html" title="Stream流和方法引用">
+                        <span class="hidden-mobile">Stream流和方法引用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
